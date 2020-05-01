@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "kutyavalegymosolyert-admin"
+  },
+  "targets": {
+    "kutyavalegymosolyert-admin": {
+      "hosting": {
+        "kegym-admin": [
+          "kutyavalegymosolyert-admin"
+        ]
+      }
+    }
   }
 }
