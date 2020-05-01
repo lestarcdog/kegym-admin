@@ -1,19 +1,25 @@
 import { NgModule } from '@angular/core'
+import { AngularFireModule } from '@angular/fire'
+import { AngularFirestoreModule } from '@angular/fire/firestore'
 import { BrowserModule } from '@angular/platform-browser'
-
-import { AppRoutingModule } from './routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+
+import { environment } from '../environments/environment'
+import { AppComponent } from './app.component'
+import { AppRoutingModule } from './routing.module'
 
 @NgModule({
   declarations: [
-
+    AppComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule
   ],
   providers: [],
-  bootstrap: []
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
