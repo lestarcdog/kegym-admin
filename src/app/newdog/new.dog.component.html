@@ -1,0 +1,50 @@
+<h1>Új kutya hozzáadása</h1>
+<div id="container">
+  <form [formGroup]="dogGroup" (ngSubmit)="submit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Név</mat-label>
+      <input matInput formControlName="name">
+      <mat-error>Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Kutya születési éve</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="birthDate" [max]="maxDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error>Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Chip szám</mat-label>
+      <input matInput type="number" formControlName="chipNumber">
+      <mat-error>15 számjegyből álló mező</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Tulajdonos neve</mat-label>
+      <input matInput formControlName="owner">
+      <mat-error>Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Tulajdonos telefonszám</mat-label>
+      <input matInput type="tel" formControlName="ownerPhone">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Tulajdonos email</mat-label>
+      <input matInput type="email" formControlName="ownerEmail">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Lakcím</mat-label>
+      <input matInput formControlName="address">
+      <mat-error>Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <mat-error *ngIf="saveError">{{saveError}}</mat-error>
+
+    <button [disabled]="isSaving" mat-raised-button color="primary">Mentés</button>
+  </form>
+</div>

@@ -1,12 +1,17 @@
-<mat-sidenav-container>
-  <mat-sidenav opened mode="side">
+<mat-sidenav-container #sidenav>
+  <mat-sidenav [opened]="!!currentUserName" mode="side">
     <div id="current-user">
-      <div *ngIf="currentUserName">Szia <strong>{{currentUserName}}</strong></div>
-      <div *ngIf="!currentUserName">Jelentkezz be</div>
-      <button mat-icon-button (click)="logout()">
-        <mat-icon style="font-size: 20px;">exit_to_app</mat-icon>
-      </button>
+      <div>
+        Szia <strong>{{currentUserName}}</strong>
+        <button mat-icon-button (click)="logout()">
+          <mat-icon style="font-size: 20px;">exit_to_app</mat-icon>
+        </button>
+      </div>
     </div>
+    <nav>
+      <button [routerLink]="['new-dog']" mat-button>Új kutya</button>
+      <button [routerLink]="['dog-list']" mat-button>Kutya lista</button>
+    </nav>
   </mat-sidenav>
   <mat-sidenav-content>
     <router-outlet></router-outlet>
