@@ -43,7 +43,6 @@ export class NewDogComponent implements OnInit {
       map(params => params.get('dogId')),
       filter(x => !!x),
       switchMap(dogId => {
-        console.log('Dog id', dogId)
         return this.storage.collection<Dog>('dogs').doc<Dog>(dogId).get()
       })
     ).subscribe((dogDoc: DocumentSnapshot<Dog>) => {
@@ -59,7 +58,6 @@ export class NewDogComponent implements OnInit {
 
   resetDog() {
     if (this.originalDog) {
-      console.log('original dog', this.originalDog)
       this.title = `Módosítás: ${this.originalDog.name}`
       this.dogGroup.setValue({
         name: this.originalDog.name,
@@ -107,6 +105,7 @@ async submit() {
         this.snackBar.open('Sikeres frissítés', 'Ok')
       } else {
         await this.storage.collection<Dog>('dogs').add({ ...newDog })
+        this.dogGroup.reset({})
         this.snackBar.open('Sikeres mentés', 'Ok')
       }
     } catch (e) {

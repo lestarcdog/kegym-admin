@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: 'new-dog', component: NewDogComponent, ...canActivate(redirectUnauthorizedToLogin)},
   { path: 'dog-list', component: DogListComponent, ...canActivate(redirectUnauthorizedToLogin)},
   { path: 'dog/:dogId/edit', component: NewDogComponent, ...canActivate(redirectUnauthorizedToLogin)},
-  { path: '**', redirectTo: 'new-dog' },
+  { path: '**', redirectTo: 'dog-list' },
 
 ];
 

@@ -31,6 +31,9 @@ nav {
   align-items: center;
 
   button {
-    color: white;
+    color: #BBFFBB;
+  }
+  button.active {
+    color: white
   }
 }
