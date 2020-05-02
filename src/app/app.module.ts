@@ -1,4 +1,6 @@
-import { NgModule } from '@angular/core'
+import { registerLocaleData } from '@angular/common'
+import hunLocal from '@angular/common/locales/hu'
+import { LOCALE_ID, NgModule } from '@angular/core'
 import { AngularFireModule } from '@angular/fire'
 import { AngularFireAuthModule } from '@angular/fire/auth'
 import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard'
@@ -23,6 +25,8 @@ import { LoginComponent } from './login/login.component'
 import { NavComponent } from './nav/nav.component'
 import { NewDogComponent } from './newdog/new.dog.component'
 import { AppRoutingModule } from './routing.module'
+
+registerLocaleData(hunLocal)
 
 @NgModule({
   declarations: [
@@ -54,6 +58,7 @@ import { AppRoutingModule } from './routing.module'
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'hu-HU' },
+    { provide: LOCALE_ID, useValue: 'hu' }
   ],
   bootstrap: [AppComponent]
 })

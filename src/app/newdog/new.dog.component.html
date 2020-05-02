@@ -1,4 +1,4 @@
-<h1>Új kutya hozzáadása</h1>
+<h1>{{title}}</h1>
 <div id="container">
   <form [formGroup]="dogGroup" (ngSubmit)="submit()">
     <mat-form-field appearance="fill">
@@ -28,6 +28,12 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
+      <mat-label>Lakcím</mat-label>
+      <input matInput formControlName="address">
+      <mat-error>Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
       <mat-label>Tulajdonos telefonszám</mat-label>
       <input matInput type="tel" formControlName="ownerPhone">
     </mat-form-field>
@@ -35,16 +41,21 @@
     <mat-form-field appearance="fill">
       <mat-label>Tulajdonos email</mat-label>
       <input matInput type="email" formControlName="ownerEmail">
+      <mat-error>Helytelen email formátum</mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Lakcím</mat-label>
-      <input matInput formControlName="address">
-      <mat-error>Kötelező mező</mat-error>
-    </mat-form-field>
+    <p *ngIf="originalDog">
+      Utoljára módosítva: {{$any(originalDog.createdAt).toDate() | date:'medium'}} <br />
+      Utoljára módosította: {{originalDog.createdBy}}
+    </p>
 
     <mat-error *ngIf="saveError">{{saveError}}</mat-error>
 
-    <button [disabled]="isSaving" mat-raised-button color="primary">Mentés</button>
+    <div id="action-bar">
+      <button [disabled]="isSaving || dogGroup.invalid" mat-raised-button color="primary" type="submit">Mentés</button>
+      <button *ngIf="originalDog" [disabled]="isSaving || dogGroup.pristine" mat-raised-button color="warn"
+        type="button" (click)="confirmResetDog()">Reset</button>
+
+    </div>
   </form>
 </div>
