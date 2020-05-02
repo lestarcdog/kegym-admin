@@ -1,0 +1,23 @@
+<div id="login-form">
+  <h2>Kutyával egy mosolyért - Admin felület</h2>
+  <div id="logo">
+    <img src="assets/alapitvany_logo.png" />
+  </div>
+  <form id="form" [formGroup]="loginGroup" (ngSubmit)="submit()">
+    <mat-form-field class="form-field" appearance="fill">
+      <mat-label>Felhasználó név</mat-label>
+      <input matInput placeholder="kutya@valami.hu" formControlName="username">
+      <mat-error>Hibás email cím vagy jelszó</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="form-field" appearance="fill">
+      <mat-label>Jelszó</mat-label>
+      <input matInput type="password" formControlName="password">
+      <mat-error>Túl rövid jelszó</mat-error>
+    </mat-form-field>
+
+
+    <button [disabled]="loading" mat-raised-button color="primary" type="submit">Bejelentkezés</button>
+    <mat-error *ngIf="logginError">{{logginError}}</mat-error>
+  </form>
+</div>

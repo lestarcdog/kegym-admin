@@ -1,0 +1,26 @@
+mat-sidenav-container {
+  height: 100%;
+}
+
+mat-sidenav {
+  width: 200px;
+  background-color: #00C12B;
+  display: flex;
+  flex-direction: column;
+  padding: 25px 10px;
+  height: 100%;
+}
+
+#current-user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 12px;
+}
+
+mat-sidenav-content {
+  background-color: #a3ffa3;
+  padding: 10px;
+  height: 100%;
+  width: 100%;
+}

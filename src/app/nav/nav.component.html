@@ -1,0 +1,14 @@
+<mat-sidenav-container>
+  <mat-sidenav opened mode="side">
+    <div id="current-user">
+      <div *ngIf="currentUserName">Szia <strong>{{currentUserName}}</strong></div>
+      <div *ngIf="!currentUserName">Jelentkezz be</div>
+      <button mat-icon-button (click)="logout()">
+        <mat-icon style="font-size: 20px;">exit_to_app</mat-icon>
+      </button>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
