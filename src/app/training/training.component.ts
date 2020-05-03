@@ -1,11 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AngularFirestore, QuerySnapshot } from '@angular/fire/firestore';
-import { FormControl } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
-import { of, Subscription } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
-import { TrainingEntry, trainingTypesArray } from 'src/domain/training';
+import { Component, OnDestroy, OnInit } from '@angular/core'
+import { AngularFireAuth } from '@angular/fire/auth'
+import { AngularFirestore, QuerySnapshot } from '@angular/fire/firestore'
+import { FormControl } from '@angular/forms'
+import { MatSnackBar } from '@angular/material/snack-bar'
+import { ActivatedRoute } from '@angular/router'
+import { of, Subscription } from 'rxjs'
+import { switchMap, tap } from 'rxjs/operators'
+import { TrainingEntry, trainingTypesArray } from 'src/domain/training'
 
 export interface TrainingEntryItem extends TrainingEntry {
   docId: string
@@ -20,7 +21,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
   constructor(
     private storage: AngularFirestore,
     private route: ActivatedRoute,
-    private snack: MatSnackBar
+    private snack: MatSnackBar,
+    private auth: AngularFireAuth
   ) { }
 
   entries: TrainingEntryItem[] = []
@@ -99,15 +101,16 @@ export class TrainingComponent implements OnInit, OnDestroy {
   async saveEntry(item: TrainingEntryItem) {
     this.loading = true
     try {
+      const firebaseEntry = await this.convertEntryItemToItem(item)
       if (item.docId) {
-        console.log('Updating item', item)
-        await this.getTrainingDoc(this.dogId, item.docId).set(this.convertEntryItemToItem(item))
-        this.newEntry = undefined
+        console.log('Updating item', firebaseEntry)
+        await this.getTrainingDoc(this.dogId, item.docId).set(firebaseEntry)
       } else {
-        await this.getDogDoc(this.dogId).collection<TrainingEntry>('training').add(this.convertEntryItemToItem(item))
+        console.log('Creating new entry', firebaseEntry)
+        await this.getDogDoc(this.dogId).collection<TrainingEntry>('training').add(firebaseEntry)
+        this.newEntry = undefined
       }
       await this.refreshEntries().toPromise()
-      this.newEntry = undefined
 
       this.snack.open(`Edzés ${item.date.toLocaleDateString()} sikeresen frissítve`, 'Ok', { duration: 2000 })
     } catch (e) {
@@ -119,12 +122,15 @@ export class TrainingComponent implements OnInit, OnDestroy {
   }
 
 
-  private convertEntryItemToItem(item: TrainingEntryItem): TrainingEntry {
+  private async convertEntryItemToItem(item: TrainingEntryItem): Promise<TrainingEntry> {
+    const email = (await this.auth.currentUser).email
     return {
       date: item.date,
       type: item.type,
       progress: item.progress,
-      comment: item.comment || null
+      comment: item.comment || null,
+      createdAt: new Date(),
+      createdBy: email
     }
   }
 

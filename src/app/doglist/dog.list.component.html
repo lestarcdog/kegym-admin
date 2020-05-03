@@ -32,10 +32,10 @@
       <button mat-icon-button [routerLink]="['/dog', 'training', {dogId: element.docId, dogName: element.name}]" matTooltip="Képzési napló">
         <mat-icon>assignment</mat-icon>
       </button>
-      <button mat-icon-button [routerLink]="['/dog', element.docId, 'documents']" matTooltip="Dokumentumok/iratok">
+      <button mat-icon-button [routerLink]="['/dog', 'documents', {dogId: element.docId, dogName: element.name}]" matTooltip="Dokumentumok/iratok">
         <mat-icon>folder</mat-icon>
       </button>
-      <button mat-icon-button [routerLink]="['/dog', element.docId, 'provision']" matTooltip="Etetési napló">
+      <button disabled="true" mat-icon-button [routerLink]="['/dog', 'provision', {dogId: element.docId, dogName: element.name}]" matTooltip="Etetési napló">
         <mat-icon>fastfood</mat-icon>
       </button>
       <button mat-icon-button [routerLink]="['/dog', element.docId, 'edit']" matTooltip="Szerkesztés">

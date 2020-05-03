@@ -1,4 +1,5 @@
 <mat-card id="container">
+  <mat-card-subtitle *ngIf="entry.docId">Utolsó módosítás {{$any(entry.createdAt)?.toDate() | date:'medium'}} - {{entry.createdBy}}</mat-card-subtitle>
   <form (ngSubmit)="submit()" [formGroup]="entryGroup">
 
     <mat-form-field appearance="fill">

@@ -131,5 +131,8 @@
       }
     }
   },
-  "defaultProject": "kegym-admin"
+  "defaultProject": "kegym-admin",
+  "cli": {
+    "analytics": false
+  }
 }

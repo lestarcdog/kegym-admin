@@ -1,0 +1,38 @@
+#container {
+  display: flex;
+  flex-direction: column;
+}
+
+#meta-tags {
+  display: flex;
+  flex-direction: row;
+
+  margin-bottom: 15px;
+
+  mat-form-field {
+    margin: 0 15px;
+    width: 300px;
+  }
+  mat-form-field:nth-child(1) {
+    margin: 0;
+  }
+}
+
+#file-details {
+  color: #666;
+  font-size: 12px;
+}
+
+#progress-bar {
+  margin: 10px 0;
+  width: 70%;
+}
+
+mat-card-actions {
+  display: flex;
+  flex-direction: row;
+
+  button {
+    margin: 0 15px;
+  }
+}
