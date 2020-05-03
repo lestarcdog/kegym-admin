@@ -4,7 +4,7 @@ import { QuerySnapshot } from '@angular/fire/firestore/interfaces';
 import { FormControl } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Dog } from 'src/domain/dog';
@@ -28,7 +28,7 @@ export class DogListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort, { static: true })
   sort: MatSort;
 
-  constructor(private store: AngularFirestore, private router: Router) { }
+  constructor(private store: AngularFirestore, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.filterKeyControl.disable()
@@ -43,10 +43,18 @@ export class DogListComponent implements OnInit, OnDestroy {
       this.filterKeyControl.enable()
     })
 
+    const initialFilterKey = this.route.snapshot.queryParamMap.get('key')
+    this.filterKeyControl.setValue(initialFilterKey)
+
     this.sub.add(this.filterKeyControl.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged()
-    ).subscribe(key => this.dogList.filter = key))
+    ).subscribe(key => {
+      this.dogList.filter = key
+      this.router.navigate([], {
+        queryParams: { key },
+      })
+    }))
   }
 
   ngOnDestroy(): void {

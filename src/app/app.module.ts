@@ -18,6 +18,7 @@ import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatSortModule } from '@angular/material/sort'
 import { MatTableModule } from '@angular/material/table'
+import { MatTooltipModule } from '@angular/material/tooltip'
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import 'moment'
@@ -28,6 +29,8 @@ import { LoginComponent } from './login/login.component'
 import { NavComponent } from './nav/nav.component'
 import { NewDogComponent } from './newdog/new.dog.component'
 import { AppRoutingModule } from './routing.module'
+
+
 
 
 registerLocaleData(hunLocal)
@@ -61,7 +64,8 @@ registerLocaleData(hunLocal)
     MatSnackBarModule,
     MatTableModule,
     MatSortModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTooltipModule
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'hu-HU' },

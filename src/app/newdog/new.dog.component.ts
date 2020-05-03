@@ -63,13 +63,13 @@ export class NewDogComponent implements OnInit {
     if (this.originalDog) {
       this.title = `Módosítás: ${this.originalDog.name}`
       this.dogGroup.setValue({
-        name: this.originalDog.name,
+        name: this.originalDog.name || '',
         birthDate: moment((this.originalDog.birthDate as firebase.firestore.Timestamp).toDate()),
-        breed: this.originalDog.breed,
-        dogSex: this.originalDog.dogSex,
-        chipNumber: this.originalDog.chipNumber,
-        owner: this.originalDog.owner,
-        address: this.originalDog.address,
+        breed: this.originalDog.breed || '',
+        dogSex: this.originalDog.dogSex || '',
+        chipNumber: this.originalDog.chipNumber || '',
+        owner: this.originalDog.owner || '',
+        address: this.originalDog.address || '',
         ownerPhone: this.originalDog.ownerPhone,
         ownerEmail: this.originalDog.ownerEmail
       })
