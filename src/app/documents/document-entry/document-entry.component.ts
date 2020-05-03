@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
-import { AngularFireUploadTask } from '@angular/fire/storage/task'
 import { FormControl, Validators } from '@angular/forms'
+import { Observable } from 'rxjs'
 import { documentTypesArray } from 'src/domain/document'
 import { DeleteEvent, DocumentEntryItem, UploadEvent } from '../documents.component'
 
@@ -43,7 +43,7 @@ export class DocumentEntryComponent implements OnInit {
   errorMessage: string
 
   @Input()
-  uploadTask: AngularFireUploadTask
+  percentChange: Observable<number>
 
   ngOnInit(): void {
   }

@@ -6,7 +6,7 @@ import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { ActivatedRoute } from '@angular/router'
 import * as moment from 'moment'
-import { throwError } from 'rxjs'
+import { Observable, throwError } from 'rxjs'
 import { switchMap } from 'rxjs/operators'
 import { DocumentEntry, DocumentType } from 'src/domain/document'
 
@@ -25,7 +25,8 @@ export interface UploadEvent {
 
 interface NewDocument {
   newDocId: number
-  errorMessage: string
+  errorMessage?: string
+  percentChange?: Observable<number>
   uploadTask: AngularFireUploadTask
 }
 
@@ -78,7 +79,10 @@ export class DocumentsComponent implements OnInit {
 
   addNewDocument() {
     this.newDocumentId += 1
-    this.newDocuments = [{ newDocId: this.newDocumentId, errorMessage: undefined, uploadTask: undefined }, ...this.newDocuments]
+    this.newDocuments = [
+      { newDocId: this.newDocumentId, errorMessage: undefined, percentChange: undefined, uploadTask: undefined },
+      ...this.newDocuments
+    ]
   }
 
   private getDocumentId(evt: UploadEvent) {
@@ -105,7 +109,7 @@ export class DocumentsComponent implements OnInit {
 
       const storageRef = this.storage.ref(`dogs/${this.dogId}/documents/${docId}`)
       const uploadTask = storageRef.put(event.file)
-      this.syncNewDocuments(event.newDocId, { uploadTask, errorMessage: undefined })
+      this.syncNewDocuments(event.newDocId, { percentChange: uploadTask.percentageChanges(), uploadTask, errorMessage: undefined })
 
       try {
         await uploadTask.then()
@@ -119,12 +123,23 @@ export class DocumentsComponent implements OnInit {
         })
         this.newDocuments = this.newDocuments.filter(d => d.newDocId !== event.newDocId)
       } catch (e) {
-        console.error('Upload failed', e)
-        this.syncNewDocuments(event.newDocId, { errorMessage: 'Nem sikerült a feltöltés valami miatt.' })
+        if (e.code === 'storage/canceled') {
+          console.log('User cancelled upload')
+          this.filterOutNewDoc(event.newDocId)
+          this.snack.open(`Feltöltés megszakítva ${event.date.format('YYYY.MM.DD')} - ${DocumentType[event.type]}`,
+            'Ok',
+            { duration: 5000 }
+          )
+        } else {
+          console.error('Upload failed', e)
+          this.syncNewDocuments(event.newDocId, { errorMessage: 'Nem sikerült a feltöltés valami miatt.' })
+        }
       }
-
-
     }
+  }
+
+  private filterOutNewDoc(newDocId: number) {
+    this.newDocuments = this.newDocuments.filter(d => d.newDocId !== newDocId)
   }
 
   private syncNewDocuments(newDocId: number, newDoc: Partial<NewDocument>) {
@@ -140,7 +155,12 @@ export class DocumentsComponent implements OnInit {
   async delete(event: DeleteEvent) {
     console.log('Delete event', event)
     if (event.isNewDoc) {
-      this.newDocuments = this.newDocuments.filter(i => i.newDocId !== event.newDocId)
+      this.newDocuments = this.newDocuments.filter(i => {
+        if (i.uploadTask?.cancel()) {
+          console.log(i, 'task cancelled')
+        }
+        return i.newDocId !== event.newDocId
+      })
     } else {
       console.log('Delete from storage')
     }

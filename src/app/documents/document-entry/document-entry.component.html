@@ -26,11 +26,12 @@
     <p *ngIf="selectedFile" id="file-details">Név: {{selectedFile?.name}} méret: {{selectedFileSize}}</p>
   </div>
 
-  <!-- <mat-progress-bar *ngIf="uploadTask" id="progress-bar" [value]="(uploadTask?.percentageChanges() | async)"></mat-progress-bar> -->
+  <mat-progress-bar *ngIf="percentChange" id="progress-bar" [value]="percentChange | async"></mat-progress-bar>
+
 
   <mat-error *ngIf="errorMessage">{{errorMessage}}</mat-error>
   <mat-card-actions>
-    <button *ngIf="!document" [disabled]="!areFieldsValid()" mat-raised-button color="primary" type="button"
+    <button *ngIf="!document" [disabled]="!areFieldsValid() || percentChange" mat-raised-button color="primary" type="button"
       (click)="startUpload()">Feltöltés</button>
     <button mat-button color="warn" type="button" (click)="deleteDocument()">Törlés</button>
   </mat-card-actions>
