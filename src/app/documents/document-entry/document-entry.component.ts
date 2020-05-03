@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { AngularFireUploadTask } from '@angular/fire/storage/task'
 import { FormControl, Validators } from '@angular/forms'
-import { Observable } from 'rxjs'
 import { documentTypesArray } from 'src/domain/document'
 import { DeleteEvent, DocumentEntryItem, UploadEvent } from '../documents.component'
 
@@ -43,7 +43,7 @@ export class DocumentEntryComponent implements OnInit {
   errorMessage: string
 
   @Input()
-  uploadPercent: Observable<number>
+  uploadTask: AngularFireUploadTask
 
   ngOnInit(): void {
   }
@@ -51,6 +51,7 @@ export class DocumentEntryComponent implements OnInit {
   startUpload() {
     if (this.areFieldsValid()) {
       this.upload.emit({
+        newDocId: this.newEventId,
         date: this.documentDate.value,
         file: this.selectedFile,
         type: this.documentTypeSelect.value
@@ -61,13 +62,13 @@ export class DocumentEntryComponent implements OnInit {
   deleteDocument() {
     if (this.document) {
       this.delete.emit({
-        isNewEvent: false,
+        isNewDoc: false,
         docId: this.document.docId
       })
     } else {
       this.delete.emit({
-        isNewEvent: true,
-        newEventId: this.newEventId
+        isNewDoc: true,
+        newDocId: this.newEventId
       })
     }
   }

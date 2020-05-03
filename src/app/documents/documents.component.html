@@ -2,7 +2,8 @@
 <div id="container">
   <button mat-raised-button color="primary" (click)="addNewDocument()">Új dokumentum</button>
 
-  <div class="new-document-entry" *ngFor="let docIdx of newDocuments">
-    <app-document-entry [newEventId]="docIdx" (upload)="upload($event)" (delete)="delete($event)"></app-document-entry>
+  <div class="new-document-entry" *ngFor="let doc of newDocuments; trackBy: trackByItem">
+    <app-document-entry [newEventId]="doc.newDocId" [errorMessage]="doc.errorMessage" [uploadTask]="doc.uploadTask" (upload)="upload($event)"
+      (delete)="delete($event)"></app-document-entry>
   </div>
 </div>
