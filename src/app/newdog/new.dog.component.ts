@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
 import { filter, map, switchMap } from 'rxjs/operators';
-import { Dog } from 'src/domain/dog';
+import { Dog, DogSex, dogSexArray } from 'src/domain/dog';
 
 @Component({
   styleUrls: ['./new.dog.component.scss'],
@@ -17,6 +17,8 @@ export class NewDogComponent implements OnInit {
   dogGroup = new FormGroup({
     name: new FormControl(null, Validators.required),
     birthDate: new FormControl(null, Validators.required),
+    breed: new FormControl(null, Validators.required),
+    dogSex: new FormControl(null, Validators.required),
     chipNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{15}$/)]),
     owner: new FormControl(null, Validators.required),
     address: new FormControl(null, Validators.required),
@@ -26,6 +28,7 @@ export class NewDogComponent implements OnInit {
 
   originalDogId: string | undefined
   originalDog: Dog | undefined
+  dogSexs = dogSexArray
 
   title = 'Új kutya hozzáadása'
   maxDate = new Date()
@@ -62,6 +65,8 @@ export class NewDogComponent implements OnInit {
       this.dogGroup.setValue({
         name: this.originalDog.name,
         birthDate: moment((this.originalDog.birthDate as firebase.firestore.Timestamp).toDate()),
+        breed: this.originalDog.breed,
+        dogSex: this.originalDog.dogSex,
         chipNumber: this.originalDog.chipNumber,
         owner: this.originalDog.owner,
         address: this.originalDog.address,
@@ -71,40 +76,48 @@ export class NewDogComponent implements OnInit {
     }
   }
 
-confirmResetDog() {
-    if (confirm('Biztosan törli minden módosítást?')) {
+  confirmResetDog() {
+    if (confirm('Biztosan törli a módosításokat?')) {
       this.resetDog()
     }
   }
 
-async submit() {
+  async submit() {
     if (this.dogGroup.invalid) {
       return
     }
-
     this.isSaving = true
 
     const email = (await this.auth.currentUser).email
     const value = this.dogGroup.value
-    const newDog = new Dog(
-      value.name,
-      value.birthDate.toDate(),
-      value.chipNumber,
-      value.owner,
-      value.address,
-      new Date(),
-      email,
-      value.ownerPhone || null,
-      value.ownerEmail || null
-    )
+
+    const dogSex = DogSex[value.dogSex]
+    if (!dogSex) {
+      throw { code: 0, message: `Nem létező kutya nem: ${value.dogSex} ` }
+    }
+
+
+    const newDog = {
+      name: value.name,
+      birthDate: value.birthDate.toDate(),
+      breed: value.breed,
+      dogSex: value.dogSex,
+      chipNumber: value.chipNumber,
+      owner: value.chipNumber,
+      address: value.address,
+      ownerEmail: value.ownerEmail || null,
+      ownerPhone: value.ownerPhone || null,
+      createdAt: new Date(),
+      createdBy: email
+    } as Dog
 
     console.log('Saving new dog', newDog)
     try {
       if (this.originalDogId) {
-        await this.storage.collection<Dog>('dogs').doc(this.originalDogId).set({ ...newDog })
+        await this.storage.collection<Dog>('dogs').doc(this.originalDogId).set(newDog)
         this.snackBar.open('Sikeres frissítés', 'Ok')
       } else {
-        await this.storage.collection<Dog>('dogs').add({ ...newDog })
+        await this.storage.collection<Dog>('dogs').add(newDog)
         this.dogGroup.reset({})
         this.snackBar.open('Sikeres mentés', 'Ok')
       }

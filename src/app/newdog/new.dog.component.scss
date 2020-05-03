@@ -1,6 +1,17 @@
 #container {
   display: flex;
+  flex-direction: row;
   justify-content: center;
+
+  > div {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+  }
+
+  #dog-form-container {
+    flex: 3
+  }
 }
 
 form {

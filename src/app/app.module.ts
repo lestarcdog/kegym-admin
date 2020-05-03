@@ -13,6 +13,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
+import { MatSelectModule } from '@angular/material/select'
 import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatSortModule } from '@angular/material/sort'
@@ -27,6 +28,7 @@ import { LoginComponent } from './login/login.component'
 import { NavComponent } from './nav/nav.component'
 import { NewDogComponent } from './newdog/new.dog.component'
 import { AppRoutingModule } from './routing.module'
+
 
 registerLocaleData(hunLocal)
 
@@ -58,7 +60,8 @@ registerLocaleData(hunLocal)
     MatMomentDateModule,
     MatSnackBarModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule,
+    MatSelectModule
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'hu-HU' },
