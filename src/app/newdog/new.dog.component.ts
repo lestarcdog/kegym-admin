@@ -148,7 +148,7 @@ export class NewDogComponent implements OnInit {
   }
 
   async removeDog() {
-    if (this.originalDogId && confirm('Biztos szeretné kitörölni a kutyát? A feltöltött dokumentumok megmaradnak a tárhelyen')) {
+    if (this.originalDogId && confirm('Biztos ki szeretné törölni a kutyát? A feltöltött dokumentumok megmaradnak a tárhelyen')) {
       this.isSaving = true
       try {
         await this.storage.collection('dogs').doc(this.originalDogId).delete()

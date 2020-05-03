@@ -1,9 +1,11 @@
+@use "src/colors";
+
 mat-sidenav-container {
   height: 100%;
 }
 
 mat-sidenav {
-  background-color: #00C12B;
+  background-color: colors.$dark-green;
   display: flex;
   flex-direction: column;
   padding: 25px 10px;
@@ -14,11 +16,11 @@ mat-sidenav {
   flex-direction: row;
   align-items: center;
   font-size: 12px;
-  color: #a3ffa3;
+  color: colors.$light-green-bg;
 }
 
 mat-sidenav-content {
-  background-color: #a3ffa3;
+  background-color: colors.$light-green-bg;
 }
 
 #container {

@@ -1,0 +1,39 @@
+<mat-card id="container">
+  <form (ngSubmit)="submit()" [formGroup]="entryGroup">
+
+    <mat-form-field appearance="fill">
+      <mat-label>Edzés időpontja</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="date" [max]="maxDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error>Kötelező mező használd a naptár ikont.</mat-error>
+      <mat-hint>Használd a kis naptár ikont, kicsit jobbra.</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Gyakorlat</mat-label>
+      <mat-select formControlName="type">
+        <mat-option *ngFor="let t of trainingTypes" [value]="t.key">
+          {{t.value}}
+        </mat-option>
+      </mat-select>
+      <mat-error>Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <div>
+      <span class=".mat-form-field-label">Haladás</span><br />
+      <mat-slider formControlName="progress" thumbLabel step="10" min="0" max="100"></mat-slider>
+    </div>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Megjegyzés</mat-label>
+      <textarea matInput aria-multiline="true" matInput formControlName="comment"></textarea>
+    </mat-form-field>
+    <mat-card-actions>
+      <button [disabled]="isSaving || entryGroup.invalid" mat-raised-button color="primary"
+        type="submit">{{entry.docId ? 'Módosítás' : 'Mentés'}}</button>
+      <button [disabled]="isSaving" mat-raised-button color="warn" type="button" (click)="deleteEntry()"
+        type="button">Törlés</button>
+    </mat-card-actions>
+  </form>
+</mat-card>

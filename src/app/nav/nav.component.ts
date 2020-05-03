@@ -18,7 +18,7 @@ export class NavComponent implements OnInit {
   }
 
   async logout() {
-    if (confirm('Biztos kiszeretnél jelentkezni?')) {
+    if (confirm('Biztos ki szeretnél jelentkezni?')) {
       await this.auth.signOut()
       this.router.navigate(['/login'])
     }

@@ -8,6 +8,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore'
 import { ReactiveFormsModule } from '@angular/forms'
 import { MatMomentDateModule } from '@angular/material-moment-adapter'
 import { MatButtonModule } from '@angular/material/button'
+import { MatCardModule } from '@angular/material/card'
 import { MAT_DATE_LOCALE } from '@angular/material/core'
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -15,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
 import { MatSelectModule } from '@angular/material/select'
 import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatSliderModule } from '@angular/material/slider'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatSortModule } from '@angular/material/sort'
 import { MatTableModule } from '@angular/material/table'
@@ -29,7 +31,8 @@ import { LoginComponent } from './login/login.component'
 import { NavComponent } from './nav/nav.component'
 import { NewDogComponent } from './newdog/new.dog.component'
 import { AppRoutingModule } from './routing.module'
-
+import { TrainingEntryComponent } from './training/training-entry/training-entry.component'
+import { TrainingComponent } from './training/training.component'
 
 
 
@@ -41,7 +44,9 @@ registerLocaleData(hunLocal)
     LoginComponent,
     NavComponent,
     NewDogComponent,
-    DogListComponent
+    DogListComponent,
+    TrainingComponent,
+    TrainingEntryComponent
   ],
   imports: [
     BrowserModule,
@@ -65,7 +70,9 @@ registerLocaleData(hunLocal)
     MatTableModule,
     MatSortModule,
     MatSelectModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSliderModule,
+    MatCardModule
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'hu-HU' },

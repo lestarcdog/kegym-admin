@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DogListComponent } from './doglist/dog.list.component';
 import { LoginComponent } from './login/login.component';
 import { NewDogComponent } from './newdog/new.dog.component';
+import { TrainingComponent } from './training/training.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'new-dog', component: NewDogComponent, ...canActivate(redirectUnauthorizedToLogin)},
   { path: 'dog-list', component: DogListComponent, ...canActivate(redirectUnauthorizedToLogin)},
   { path: 'dog/:dogId/edit', component: NewDogComponent, ...canActivate(redirectUnauthorizedToLogin)},
+  { path: 'dog/training', component: TrainingComponent, ...canActivate(redirectUnauthorizedToLogin)},
   { path: '**', redirectTo: 'dog-list' },
 
 ];

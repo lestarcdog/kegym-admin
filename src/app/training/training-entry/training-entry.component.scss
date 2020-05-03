@@ -1,0 +1,24 @@
+@use 'src/colors';
+
+#container {
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-card  {
+  background-color: colors.$lighter-green-bg;
+}
+
+form {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+#action-bar {
+  margin-top: 25px;
+
+  button {
+    margin: 0 25px
+  }
+}

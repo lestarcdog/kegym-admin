@@ -1,0 +1,28 @@
+<h1>{{dogName}} - edzés naplója</h1>
+<div id="container">
+  <div>
+    <button mat-raised-button color="primary" (click)="addNewEntry()" id="new-button">Új bejegyzés</button>
+    <mat-form-field appearance="standard">
+      <mat-label>Gyakorlat</mat-label>
+      <mat-select [formControl]="trainingTypeFilter">
+        <mat-option [value]=""> - </mat-option>
+        <mat-option *ngFor="let t of trainingTypes" [value]="t.key">
+          {{t.value}}
+        </mat-option>
+      </mat-select>
+      <mat-error>Kötelező mező</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="newEntry" id="new-entry-item">
+    <app-training-entry [entry]="newEntry" (save)="saveEntry($event)" (delete)="deleteEntry($event)"
+      [isSaving]="loading">
+    </app-training-entry>
+  </div>
+
+  <div class="entry-item" *ngFor="let entry of filteredEntries">
+    <app-training-entry [entry]="entry" (save)="saveEntry($event)" (delete)="deleteEntry($event)" [isSaving]="loading">
+    </app-training-entry>
+  </div>
+
+</div>
