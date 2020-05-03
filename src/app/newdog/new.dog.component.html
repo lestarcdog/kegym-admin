@@ -2,68 +2,86 @@
 <div id="container">
   <div id="dog-form-container">
     <form [formGroup]="dogGroup" (ngSubmit)="submit()">
-      <mat-form-field appearance="fill">
-        <mat-label>Kutya neve</mat-label>
-        <input matInput formControlName="name">
-        <mat-error>Kötelező mező</mat-error>
-      </mat-form-field>
+      <div id="form-inputs">
+        <div>
+          <h4>Kutya adatai</h4>
+          <mat-form-field appearance="fill">
+            <mat-label>Kutya neve</mat-label>
+            <input matInput formControlName="name">
+            <mat-error>Kötelező mező</mat-error>
+          </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Kutya születési éve</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="birthDate" [max]="maxDate">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-        <mat-error>Kötelező mező</mat-error>
-      </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Kutya születési éve</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="birthDate" [max]="maxDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error>Kötelező mező használd a naptár ikont.</mat-error>
+            <mat-hint>Használd a kis naptár ikont, kicsit jobbra.</mat-hint>
+          </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Fajta</mat-label>
-        <input matInput formControlName="breed">
-        <mat-error>Kötelező mező</mat-error>
-      </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Fajta</mat-label>
+            <input matInput formControlName="breed">
+            <mat-error>Kötelező mező</mat-error>
+          </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Neme</mat-label>
-        <mat-select formControlName="dogSex">
-          <mat-option *ngFor="let dogSex of dogSexs" [value]="dogSex.key">
-            {{dogSex.value}}
-          </mat-option>
-        </mat-select>
-        <mat-error>Kötelező mező</mat-error>
-      </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Neme</mat-label>
+            <mat-select formControlName="dogSex">
+              <mat-option *ngFor="let dogSex of dogSexs" [value]="dogSex.key">
+                {{dogSex.value}}
+              </mat-option>
+            </mat-select>
+            <mat-error>Kötelező mező</mat-error>
+          </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Chip szám</mat-label>
-        <input matInput type="number" formControlName="chipNumber" placeholder="15 számjegy">
-        <mat-error>15 számjegyből álló mező</mat-error>
-      </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Munka típusa</mat-label>
+            <mat-select formControlName="assistanceType">
+              <mat-option *ngFor="let at of assistanceTypes" [value]="at.key">
+                {{at.value}}
+              </mat-option>
+            </mat-select>
+            <mat-error>Valamit kell dolgoznia</mat-error>
+          </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Tulajdonos neve</mat-label>
-        <input matInput formControlName="owner">
-        <mat-error>Kötelező mező</mat-error>
-      </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Chip szám</mat-label>
+            <input #chipNumberInput matInput type="number" size="15" formControlName="chipNumber"
+              placeholder="15 számjegy">
+            <mat-error>15 számjegyből álló mező</mat-error>
+            <mat-hint>{{chipNumberInput.value?.length || 0}}/15</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <h4>Gazda adatai</h4>
+          <mat-form-field appearance="fill">
+            <mat-label>Tulajdonos neve</mat-label>
+            <input matInput formControlName="owner">
+            <mat-error>Egy gazda kötelező</mat-error>
+          </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Lakcím</mat-label>
-        <input matInput formControlName="address">
-        <mat-error>Kötelező mező</mat-error>
-      </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Lakcím</mat-label>
+            <input matInput formControlName="address">
+          </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Tulajdonos telefonszám</mat-label>
-        <input matInput type="tel" formControlName="ownerPhone">
-      </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Tulajdonos telefonszám</mat-label>
+            <input matInput type="tel" formControlName="ownerPhone">
+          </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Tulajdonos email</mat-label>
-        <input matInput type="email" formControlName="ownerEmail">
-        <mat-error>Helytelen email formátum</mat-error>
-      </mat-form-field>
-
-      <mat-error *ngIf="saveError">{{saveError}}</mat-error>
-
+          <mat-form-field appearance="fill">
+            <mat-label>Tulajdonos email</mat-label>
+            <input matInput type="email" formControlName="ownerEmail">
+            <mat-error>Helytelen email formátum</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
       <div id="action-bar">
+        <mat-error *ngIf="saveError">{{saveError}}</mat-error>
+
         <button [disabled]="isSaving || dogGroup.invalid" mat-raised-button color="primary"
           type="submit">Mentés</button>
         <button *ngIf="originalDog" [disabled]="isSaving || dogGroup.pristine" mat-raised-button color="warn"
@@ -76,6 +94,7 @@
       Utoljára módosítva: {{$any(originalDog.createdAt).toDate() | date:'medium'}} <br />
       Utoljára módosította: {{originalDog.createdBy}}
     </p>
+    <button [disabled]="isSaving" mat-button color="warn" (click)="removeDog()">Törlés</button>
 
   </div>
 </div>

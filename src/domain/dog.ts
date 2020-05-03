@@ -7,7 +7,17 @@ export enum DogSex {
   IVARTALAN_SZUKA = 'Ivartalan szuka'
 }
 
+export enum AssistanceDogType {
+  FACILITY = 'Terápiás / Facility',
+  PSYCHIATRIC = 'Személyisegítő / Psychiatric',
+  MOBILITY = 'Mozgássegítő / Mobility',
+  HEARING = 'Halló / hearing',
+  THERAPY = 'Terápiás / Therapy',
+  ALARM = 'Jelző / Alarm'
+}
+
 export const dogSexArray = Object.keys(DogSex).map(key => ({ key, value: DogSex[key] }))
+export const asssistanceDogType = Object.keys(AssistanceDogType).map(key => ({ key, value: AssistanceDogType[key] }))
 
 export class Dog {
   constructor(
@@ -15,6 +25,7 @@ export class Dog {
     public birthDate: Date | firestore.Timestamp,
     public breed: string,
     public dogSex: DogSex,
+    public assistanceType: AssistanceDogType,
     public chipNumber: string,
     public owner: string,
     public address: string,

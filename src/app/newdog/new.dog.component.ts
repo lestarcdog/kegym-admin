@@ -1,12 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
-import * as moment from 'moment';
-import { filter, map, switchMap } from 'rxjs/operators';
-import { Dog, DogSex, dogSexArray } from 'src/domain/dog';
+import { Component, OnInit } from '@angular/core'
+import { AngularFireAuth } from '@angular/fire/auth'
+import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { MatSnackBar } from '@angular/material/snack-bar'
+import { ActivatedRoute, Router } from '@angular/router'
+import * as moment from 'moment'
+import { filter, map, switchMap } from 'rxjs/operators'
+import { asssistanceDogType, Dog, DogSex, dogSexArray } from 'src/domain/dog'
+
+interface DogForm {
+  name: string
+  birthDate: moment.Moment
+  breed: string
+  dogSex: string
+  assistanceType: string
+  chipNumber: string
+  owner: string
+  address: string
+  ownerPhone?: string
+  ownerEmail?: string
+}
 
 @Component({
   styleUrls: ['./new.dog.component.scss'],
@@ -19,9 +32,10 @@ export class NewDogComponent implements OnInit {
     birthDate: new FormControl(null, Validators.required),
     breed: new FormControl(null, Validators.required),
     dogSex: new FormControl(null, Validators.required),
+    assistanceType: new FormControl(null, Validators.required),
     chipNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{15}$/)]),
     owner: new FormControl(null, Validators.required),
-    address: new FormControl(null, Validators.required),
+    address: new FormControl(null),
     ownerPhone: new FormControl(null),
     ownerEmail: new FormControl(null, Validators.email)
   })
@@ -29,6 +43,7 @@ export class NewDogComponent implements OnInit {
   originalDogId: string | undefined
   originalDog: Dog | undefined
   dogSexs = dogSexArray
+  assistanceTypes = asssistanceDogType
 
   title = 'Új kutya hozzáadása'
   maxDate = new Date()
@@ -39,6 +54,7 @@ export class NewDogComponent implements OnInit {
     private storage: AngularFirestore,
     private auth: AngularFireAuth,
     private snackBar: MatSnackBar,
+    private router: Router,
     private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -67,12 +83,13 @@ export class NewDogComponent implements OnInit {
         birthDate: moment((this.originalDog.birthDate as firebase.firestore.Timestamp).toDate()),
         breed: this.originalDog.breed || '',
         dogSex: this.originalDog.dogSex || '',
+        assistanceType: this.originalDog.assistanceType || '',
         chipNumber: this.originalDog.chipNumber || '',
         owner: this.originalDog.owner || '',
         address: this.originalDog.address || '',
         ownerPhone: this.originalDog.ownerPhone,
         ownerEmail: this.originalDog.ownerEmail
-      })
+      } as DogForm)
     }
   }
 
@@ -89,7 +106,7 @@ export class NewDogComponent implements OnInit {
     this.isSaving = true
 
     const email = (await this.auth.currentUser).email
-    const value = this.dogGroup.value
+    const value = this.dogGroup.value as DogForm
 
     const dogSex = DogSex[value.dogSex]
     if (!dogSex) {
@@ -102,6 +119,7 @@ export class NewDogComponent implements OnInit {
       birthDate: value.birthDate.toDate(),
       breed: value.breed,
       dogSex: value.dogSex,
+      assistanceType: value.assistanceType,
       chipNumber: value.chipNumber,
       owner: value.chipNumber,
       address: value.address,
@@ -127,6 +145,21 @@ export class NewDogComponent implements OnInit {
     } finally {
       this.isSaving = false
     }
+  }
 
+  async removeDog() {
+    if (this.originalDogId && confirm('Biztos szeretné kitörölni a kutyát? A feltöltött dokumentumok megmaradnak a tárhelyen')) {
+      this.isSaving = true
+      try {
+        await this.storage.collection('dogs').doc(this.originalDogId).delete()
+        this.snackBar.open('Sikeres törlés', 'Ok', { duration: 2000 })
+        this.router.navigate(['dog-list'])
+      } catch (e) {
+        console.error(e)
+        this.snackBar.open('Sikertelen törlés', 'Ajaj')
+      } finally {
+        this.isSaving = false
+      }
+    }
   }
 }

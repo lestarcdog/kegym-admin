@@ -3,14 +3,15 @@
   flex-direction: row;
   justify-content: center;
 
-  > div {
+  #dog-form-container {
     display: flex;
-    flex: 1;
     justify-content: center;
+    flex: 3
   }
 
-  #dog-form-container {
-    flex: 3
+  #dog-meta {
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -19,10 +20,22 @@ form {
   flex-direction: column;
   width: 50%;
 
+  #form-inputs {
+    display: flex;
+    flex-direction: row;
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin: 0 10px;
+    }
+  }
+
   #action-bar {
     display: flex;
     flex-direction: row;
-    margin-top: 10px;
+    margin-top: 25px;
     padding: 0 15px;
 
     button {
