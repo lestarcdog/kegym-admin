@@ -57,8 +57,6 @@ export class TrainingEntryComponent {
   constructor() { }
 
   submit() {
-    console.log(this.entryGroup.value)
-
     if (this.entryGroup.valid) {
       const formValue = this.entryGroup.value as EntryForm
       this.save.emit({

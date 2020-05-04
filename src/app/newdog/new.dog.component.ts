@@ -121,7 +121,7 @@ export class NewDogComponent implements OnInit {
       dogSex: value.dogSex,
       assistanceType: value.assistanceType,
       chipNumber: value.chipNumber,
-      owner: value.chipNumber,
+      owner: value.owner,
       address: value.address,
       ownerEmail: value.ownerEmail || null,
       ownerPhone: value.ownerPhone || null,
