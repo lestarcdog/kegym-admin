@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Dog } from 'src/domain/dog';
+import { mapFirebaseDog } from '../service/mapper/dogMapper';
 
 
 class ListDog extends Dog {
@@ -15,11 +16,11 @@ class ListDog extends Dog {
 }
 
 @Component({
-  styleUrls: ['./dog.list.component.scss'],
-  templateUrl: './dog.list.component.html'
+  styleUrls: ['./dog-list.component.scss'],
+  templateUrl: './dog-list.component.html'
 })
 export class DogListComponent implements OnInit, OnDestroy {
-  displayedColumns = ['name', 'birthDate', 'owner', 'ownerPhone', 'actions'];
+  displayedColumns = ['name', 'birthDate', 'owner', 'phone', 'trainer', 'actions'];
   dogList: MatTableDataSource<ListDog>
   filterKeyControl = new FormControl(null)
 
@@ -35,7 +36,7 @@ export class DogListComponent implements OnInit, OnDestroy {
 
     this.store.collection<Dog>('dogs').get().subscribe((snapshot: QuerySnapshot<Dog>) => {
       const fullDogList = snapshot.docs.map(doc => ({
-        ...doc.data(),
+        ...mapFirebaseDog(doc.data()),
         docId: doc.id
       }) as ListDog)
       this.dogList = new MatTableDataSource<ListDog>(fullDogList)

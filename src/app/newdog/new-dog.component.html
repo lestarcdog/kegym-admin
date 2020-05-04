@@ -55,35 +55,39 @@
           </mat-form-field>
         </div>
         <div>
+          <h4>Kiképző</h4>
+          <app-trainer-select [parentFormGroup]="dogGroup" controlName="trainer"></app-trainer-select>
+
           <h4>Gazda adatai</h4>
-          <mat-form-field appearance="fill">
-            <mat-label>Tulajdonos neve</mat-label>
-            <input matInput formControlName="owner">
-            <mat-error>Egy gazda kötelező</mat-error>
-          </mat-form-field>
+          <ng-container formGroupName="owner">
+            <mat-form-field appearance="fill">
+              <mat-label>Tulajdonos neve</mat-label>
+              <input matInput formControlName="name">
+              <mat-error>Egy gazda kötelező</mat-error>
+            </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Lakcím</mat-label>
-            <input matInput formControlName="address">
-          </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Lakcím</mat-label>
+              <input matInput formControlName="address">
+            </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Tulajdonos telefonszám</mat-label>
-            <input matInput type="tel" formControlName="ownerPhone">
-          </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Tulajdonos telefonszám</mat-label>
+              <input matInput type="tel" formControlName="phone">
+            </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Tulajdonos email</mat-label>
-            <input matInput type="email" formControlName="ownerEmail">
-            <mat-error>Helytelen email formátum</mat-error>
-          </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Tulajdonos email</mat-label>
+              <input matInput type="email" formControlName="email">
+              <mat-error>Helytelen email formátum</mat-error>
+            </mat-form-field>
+          </ng-container>
         </div>
       </div>
       <div id="action-bar">
         <mat-error *ngIf="saveError">{{saveError}}</mat-error>
 
-        <button [disabled]="isSaving || dogGroup.invalid" mat-raised-button color="primary"
-          type="submit">Mentés</button>
+        <button [disabled]="isSaving" mat-raised-button color="primary" type="submit">Mentés</button>
         <button *ngIf="originalDog" [disabled]="isSaving || dogGroup.pristine" mat-raised-button color="warn"
           type="button" (click)="confirmResetDog()">Visszaállít</button>
       </div>
@@ -91,7 +95,7 @@
   </div>
   <div *ngIf="originalDog" id="dog-meta">
     <p *ngIf="originalDog">
-      Utoljára módosítva: {{$any(originalDog.createdAt).toDate() | date:'medium'}} <br />
+      Utoljára módosítva: {{originalDog.createdAt | date:'medium'}} <br />
       Utoljára módosította: {{originalDog.createdBy}}
     </p>
     <button [disabled]="isSaving" mat-button color="warn" (click)="removeDog()">Törlés</button>

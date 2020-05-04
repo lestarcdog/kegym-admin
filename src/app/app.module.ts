@@ -10,7 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { MatMomentDateModule } from '@angular/material-moment-adapter'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
-import { MAT_DATE_LOCALE } from '@angular/material/core'
+import { MatDateFormats, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core'
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatDividerModule } from '@angular/material/divider'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -29,18 +29,31 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import 'moment'
 import { environment } from '../environments/environment'
 import { AppComponent } from './app.component'
+import { TrainerSelectComponent } from './components/trainer-select/trainer-select.component'
 import { DocumentEntryComponent } from './documents/document-entry/document-entry.component'
 import { DocumentSelectComponent } from './documents/document-select/document-select.component'
 import { DocumentsComponent } from './documents/documents.component'
-import { DogListComponent } from './doglist/dog.list.component'
+import { DogListComponent } from './doglist/dog-list.component'
 import { LoginComponent } from './login/login.component'
 import { NavComponent } from './nav/nav.component'
-import { NewDogComponent } from './newdog/new.dog.component'
+import { NewDogComponent } from './newdog/new-dog.component'
 import { AppRoutingModule } from './routing.module'
 import { TrainingEntryComponent } from './training/training-entry/training-entry.component'
 import { TrainingComponent } from './training/training.component'
 
 registerLocaleData(hunLocal)
+
+const dateFormat: MatDateFormats = {
+  parse: {
+    dateInput: 'YYYY.MM.DD'
+  },
+  display: {
+    dateInput: 'LL',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+}
 
 @NgModule({
   declarations: [
@@ -53,7 +66,8 @@ registerLocaleData(hunLocal)
     TrainingEntryComponent,
     DocumentsComponent,
     DocumentEntryComponent,
-    DocumentSelectComponent
+    DocumentSelectComponent,
+    TrainerSelectComponent
   ],
   imports: [
     BrowserModule,
@@ -86,7 +100,8 @@ registerLocaleData(hunLocal)
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'hu-HU' },
-    { provide: LOCALE_ID, useValue: 'hu' }
+    { provide: LOCALE_ID, useValue: 'hu' },
+    { provide: MAT_DATE_FORMATS, useValue: dateFormat}
   ],
   bootstrap: [AppComponent]
 })

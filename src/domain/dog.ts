@@ -1,4 +1,3 @@
-import { firestore } from 'firebase';
 
 export enum DogSex {
   IVAROS_KAN = 'Ivaros kan',
@@ -19,20 +18,29 @@ export enum AssistanceDogType {
 export const dogSexArray = Object.keys(DogSex).map(key => ({ key, value: DogSex[key] }))
 export const asssistanceDogType = Object.keys(AssistanceDogType).map(key => ({ key, value: AssistanceDogType[key] }))
 
-export class Dog {
-  constructor(
-    public name: string,
-    public birthDate: Date | firestore.Timestamp,
-    public breed: string,
-    public dogSex: DogSex,
-    public assistanceType: AssistanceDogType,
-    public chipNumber: string,
-    public owner: string,
-    public address: string,
-    public createdAt: Date | firestore.Timestamp,
-    public createdBy: string,
-    public ownerPhone: string | null,
-    public ownerEmail: string | null,
-  ) { }
+export class Owner {
+  name: string
+  address: string
+  phone: string
+  email: string
+}
 
+export class Trainer {
+  trainerId: number
+  name: string
+  email: string
+  phone: string
+}
+
+export class Dog {
+  name: string
+  birthDate: Date
+  breed: string
+  dogSex: DogSex
+  assistanceType: AssistanceDogType
+  chipNumber: string
+  trainer: Trainer
+  owner: Owner
+  createdAt: Date
+  createdBy: string
 }

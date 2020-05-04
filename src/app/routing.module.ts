@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core'
 import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard'
 import { RouterModule, Routes } from '@angular/router'
-
 import { DocumentsComponent } from './documents/documents.component'
-import { DogListComponent } from './doglist/dog.list.component'
+import { DogListComponent } from './doglist/dog-list.component'
 import { LoginComponent } from './login/login.component'
-import { NewDogComponent } from './newdog/new.dog.component'
+import { NewDogComponent } from './newdog/new-dog.component'
 import { TrainingComponent } from './training/training.component'
+
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 

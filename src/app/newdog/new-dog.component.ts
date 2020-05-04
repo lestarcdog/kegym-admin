@@ -6,7 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar'
 import { ActivatedRoute, Router } from '@angular/router'
 import * as moment from 'moment'
 import { filter, map, switchMap } from 'rxjs/operators'
-import { asssistanceDogType, Dog, DogSex, dogSexArray } from 'src/domain/dog'
+import { asssistanceDogType, Dog, DogSex, dogSexArray, Trainer } from 'src/domain/dog'
+import { mapFirebaseDog } from '../service/mapper/dogMapper'
 
 interface DogForm {
   name: string
@@ -15,15 +16,18 @@ interface DogForm {
   dogSex: string
   assistanceType: string
   chipNumber: string
-  owner: string
-  address: string
-  ownerPhone?: string
-  ownerEmail?: string
+  trainer: Trainer
+  owner: {
+    name: string
+    address: string
+    phone?: string
+    email?: string
+  }
 }
 
 @Component({
-  styleUrls: ['./new.dog.component.scss'],
-  templateUrl: './new.dog.component.html'
+  styleUrls: ['./new-dog.component.scss'],
+  templateUrl: './new-dog.component.html'
 })
 export class NewDogComponent implements OnInit {
 
@@ -34,10 +38,13 @@ export class NewDogComponent implements OnInit {
     dogSex: new FormControl(null, Validators.required),
     assistanceType: new FormControl(null, Validators.required),
     chipNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{15}$/)]),
-    owner: new FormControl(null, Validators.required),
-    address: new FormControl(null),
-    ownerPhone: new FormControl(null),
-    ownerEmail: new FormControl(null, Validators.email)
+    trainer: new FormControl(null, Validators.required),
+    owner: new FormGroup({
+      name: new FormControl(null, Validators.required),
+      address: new FormControl(null),
+      phone: new FormControl(null),
+      email: new FormControl(null, Validators.email)
+    })
   })
 
   originalDogId: string | undefined
@@ -67,7 +74,7 @@ export class NewDogComponent implements OnInit {
     ).subscribe((dogDoc: DocumentSnapshot<Dog>) => {
       if (dogDoc.exists) {
         this.originalDogId = dogDoc.id
-        this.originalDog = dogDoc.data()
+        this.originalDog = mapFirebaseDog(dogDoc.data())
         this.resetDog()
       } else {
         console.log('Doc document not exists', dogDoc)
@@ -80,15 +87,18 @@ export class NewDogComponent implements OnInit {
       this.title = `Módosítás: ${this.originalDog.name}`
       this.dogGroup.setValue({
         name: this.originalDog.name || '',
-        birthDate: moment((this.originalDog.birthDate as firebase.firestore.Timestamp).toDate()),
+        birthDate: moment(this.originalDog.birthDate),
         breed: this.originalDog.breed || '',
         dogSex: this.originalDog.dogSex || '',
         assistanceType: this.originalDog.assistanceType || '',
         chipNumber: this.originalDog.chipNumber || '',
-        owner: this.originalDog.owner || '',
-        address: this.originalDog.address || '',
-        ownerPhone: this.originalDog.ownerPhone,
-        ownerEmail: this.originalDog.ownerEmail
+        trainer: this.originalDog.trainer,
+        owner: {
+          name: this.originalDog.owner.name,
+          address: this.originalDog.owner.address || '',
+          phone: this.originalDog.owner.phone || '',
+          email: this.originalDog.owner.email || '',
+        }
       } as DogForm)
     }
   }
@@ -100,6 +110,8 @@ export class NewDogComponent implements OnInit {
   }
 
   async submit() {
+    console.log(this.dogGroup.value)
+
     if (this.dogGroup.invalid) {
       return
     }
@@ -113,7 +125,6 @@ export class NewDogComponent implements OnInit {
       throw { code: 0, message: `Nem létező kutya nem: ${value.dogSex} ` }
     }
 
-
     const newDog = {
       name: value.name,
       birthDate: value.birthDate.toDate(),
@@ -122,9 +133,7 @@ export class NewDogComponent implements OnInit {
       assistanceType: value.assistanceType,
       chipNumber: value.chipNumber,
       owner: value.owner,
-      address: value.address,
-      ownerEmail: value.ownerEmail || null,
-      ownerPhone: value.ownerPhone || null,
+      trainer: value.trainer,
       createdAt: new Date(),
       createdBy: email
     } as Dog
