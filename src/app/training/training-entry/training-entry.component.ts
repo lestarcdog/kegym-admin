@@ -38,7 +38,7 @@ export class TrainingEntryComponent {
     // it is not a dummy element for new item if has docId
     if (i.docId) {
       this.entryGroup.setValue({
-        date: moment((i.date as any).toDate()),
+        date: moment(i.date),
         progress: i.progress,
         type: i.type,
         comment: i.comment
@@ -73,7 +73,7 @@ export class TrainingEntryComponent {
 
   deleteEntry() {
     if (this.entry.docId) {
-      const date = ((this.entry?.date as any).toDate() as Date)?.toLocaleDateString()
+      const date = this.entry.date.toLocaleDateString()
       const type = TrainingType[this.entry.type]
       if (confirm(`Biztos benne hogy törli a ${date} - ${type} edzést`)) {
         this.delete.emit(this.entry.docId)

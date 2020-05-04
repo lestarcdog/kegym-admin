@@ -106,7 +106,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   }
 
   private refreshDocuments() {
-    this.store.collection('dogs').doc(this.dogId).collection('documents', r => r.orderBy('documentDate')).get()
+    this.store.collection('dogs').doc(this.dogId).collection('documents', r => r.orderBy('documentDate', 'desc')).get()
       .subscribe((data: QuerySnapshot<DocumentEntry>) => {
         this.allDocuments = data.docs.map(d => {
           const docData = d.data()

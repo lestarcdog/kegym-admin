@@ -4,8 +4,8 @@ import { AngularFirestore, QuerySnapshot } from '@angular/fire/firestore'
 import { FormControl } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { ActivatedRoute } from '@angular/router'
-import { of, Subscription } from 'rxjs'
-import { switchMap, tap } from 'rxjs/operators'
+import { Subscription } from 'rxjs'
+import { map } from 'rxjs/operators'
 import { TrainingEntry, trainingTypesArray } from 'src/domain/training'
 
 export interface TrainingEntryItem extends TrainingEntry {
@@ -39,19 +39,12 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route.paramMap.pipe(
-      switchMap(param => {
+      map(param => {
         this.dogId = param.get('dogId')
         this.dogName = param.get('dogName')
-        if (this.dogId) {
-          return this.getAllEntries(this.dogId)
-        } else {
-          return of()
-        }
+        return this.dogId
       })
-    ).subscribe((data: QuerySnapshot<TrainingEntry>) => {
-      this.entries = data.docs.map(doc => ({ docId: doc.id, ...doc.data() } as TrainingEntryItem))
-      this.filteredEntries = this.entries
-    }, err => console.error(err))
+    ).subscribe(() => this.refreshEntries(), err => console.error(err))
 
     const filterSub = this.trainingTypeFilter.valueChanges.subscribe(key => this.filterEntries(key))
     this.sub.add(filterSub)
@@ -72,13 +65,21 @@ export class TrainingComponent implements OnInit, OnDestroy {
   }
 
   private refreshEntries() {
-    return this.getAllEntries(this.dogId).pipe(
-      tap((data: QuerySnapshot<TrainingEntry>) => {
-        console.log('Refreshing entries')
-        this.entries = data.docs.map(doc => ({ docId: doc.id, ...doc.data() } as TrainingEntryItem))
-        this.filterEntries(this.trainingTypeFilter.value)
+    return this.getAllEntries(this.dogId).subscribe((data: QuerySnapshot<TrainingEntry>) => {
+      this.entries = data.docs.map(doc => {
+        const d = doc.data()
+        return {
+          docId: doc.id,
+          date: (d.date as any).toDate(),
+          comment: d.comment,
+          progress: d.progress,
+          type: d.type,
+          createdAt: (d.createdAt as any).toDate(),
+          createdBy: d.createdBy,
+        }
       })
-    )
+      this.filterEntries(this.trainingTypeFilter.value)
+    }, err => console.error(err))
   }
 
   private getAllEntries(dogId: string) {
@@ -94,8 +95,9 @@ export class TrainingComponent implements OnInit, OnDestroy {
   }
 
   addNewEntry() {
-    this.newEntry = {} as TrainingEntryItem
-    console.log(this.newEntry)
+    if (!this.newEntry) {
+      this.newEntry = {} as TrainingEntryItem
+    }
   }
 
   async saveEntry(item: TrainingEntryItem) {
@@ -110,8 +112,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
         await this.getDogDoc(this.dogId).collection<TrainingEntry>('training').add(firebaseEntry)
         this.newEntry = undefined
       }
-      await this.refreshEntries().toPromise()
-
+      this.refreshEntries()
       this.snack.open(`Edzés ${item.date.toLocaleDateString()} sikeresen frissítve`, 'Ok', { duration: 2000 })
     } catch (e) {
       console.error(e)
@@ -143,7 +144,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     this.loading = true
     try {
       await this.getTrainingDoc(this.dogId, docId).delete()
-      await this.refreshEntries().toPromise()
+      this.refreshEntries()
       this.snack.open('Bejegyzés törölve', 'Ok', { duration: 2000 })
     } catch (e) {
       console.error(e)
