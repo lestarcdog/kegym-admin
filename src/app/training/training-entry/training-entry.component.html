@@ -21,9 +21,10 @@
       <mat-error>Kötelező mező</mat-error>
     </mat-form-field>
 
-    <div>
-      <span class=".mat-form-field-label">Haladás</span><br />
-      <mat-slider formControlName="progress" thumbLabel step="10" min="0" max="100"></mat-slider>
+    <div id="training-progress">
+      <span id="label" class=".mat-form-field-label">Haladás</span><br />
+      <mat-slider #traningProgress formControlName="progress" thumbLabel step="10" min="0" max="100"></mat-slider>
+      <span id="progress-text">{{traningProgress.displayValue}} %</span>
     </div>
 
     <mat-form-field appearance="fill">

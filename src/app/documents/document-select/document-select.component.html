@@ -1,0 +1,10 @@
+<mat-form-field appearance="fill">
+  <mat-label>Dokumentum típusa</mat-label>
+  <mat-select [formControl]="selectControl">
+    <mat-option *ngIf="addEmptyElement" [value]=""><strong>Összes mutatása</strong></mat-option>
+    <mat-option *ngFor="let dt of documentTypes" [value]="dt.key">
+      {{dt.value}}
+    </mat-option>
+  </mat-select>
+  <mat-error>Kötelező választani</mat-error>
+</mat-form-field>

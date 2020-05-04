@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
+import * as moment from 'moment'
 import { Observable } from 'rxjs'
 import { documentTypesArray } from 'src/domain/document'
 import { DeleteEvent, DocumentEntryItem, UploadEvent } from '../documents.component'
@@ -31,16 +32,24 @@ export class DocumentEntryComponent implements OnInit {
    * Either new event id or the document is specified.
    */
   @Input()
-  newEventId: number
+  newEventId?: number
 
   /**
    * Input if existing document should be presented
    */
-  @Input()
   document: DocumentEntryItem
 
+  @Input('document')
+  set setDocument(doc: DocumentEntryItem) {
+    this.document = doc
+    this.documentTypeSelect.setValue(doc.type)
+    this.documentTypeSelect.disable()
+    this.documentDate.setValue(moment(doc.documentDate))
+    this.documentDate.disable()
+  }
+
   @Input()
-  errorMessage: string
+  errorMessage?: string
 
   @Input()
   percentChange: Observable<number>
@@ -60,16 +69,18 @@ export class DocumentEntryComponent implements OnInit {
   }
 
   deleteDocument() {
-    if (this.document) {
-      this.delete.emit({
-        isNewDoc: false,
-        docId: this.document.docId
-      })
-    } else {
-      this.delete.emit({
-        isNewDoc: true,
-        newDocId: this.newEventId
-      })
+    if (confirm(`Biztosan szeretné törölni a dokumentumot?`)) {
+      if (this.document) {
+        this.delete.emit({
+          isNewDoc: false,
+          doc: this.document
+        })
+      } else {
+        this.delete.emit({
+          isNewDoc: true,
+          newDocId: this.newEventId
+        })
+      }
     }
   }
 
@@ -80,7 +91,8 @@ export class DocumentEntryComponent implements OnInit {
       if (size < 1000) {
         return `${size.toFixed(0)} KB`
       } else {
-        return ` ${(size / 1000).toFixed(0)} MB`
+        const mbSize = (size / 1000).toFixed(0)
+        return `${mbSize} MB`
       }
     } else {
       return ''
@@ -88,7 +100,11 @@ export class DocumentEntryComponent implements OnInit {
   }
 
   areFieldsValid(): boolean {
-    return this.documentTypeSelect.valid && this.selectedFile && this.documentDate.valid
+    const fileSize = (this.selectedFile?.size / 1000 / 1000)
+    if (fileSize >= 5) {
+      this.errorMessage = 'Túl nagy fájlméret. Maximumum 5MB'
+    }
+    return this.documentTypeSelect.valid && this.selectedFile && this.documentDate.valid && fileSize < 5
   }
 
   fileSelected(fileList: FileList) {

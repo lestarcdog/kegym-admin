@@ -1,6 +1,12 @@
+@use 'src/colors';
+
 #container {
   display: flex;
   flex-direction: column;
+}
+
+mat-card {
+  background-color: colors.$lighter-green-bg;
 }
 
 #meta-tags {
@@ -31,8 +37,14 @@
 mat-card-actions {
   display: flex;
   flex-direction: row;
+  margin-top: 15px;
 
   button {
     margin: 0 15px;
   }
+}
+
+#download-container {
+  display: flex;
+  flex-direction: column;
 }

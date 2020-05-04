@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnDestroy, OnInit } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
 import { AngularFirestore } from '@angular/fire/firestore'
 import { QuerySnapshot } from '@angular/fire/firestore/interfaces'
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage'
+import { FormControl } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { ActivatedRoute } from '@angular/router'
 import * as moment from 'moment'
-import { Observable, throwError } from 'rxjs'
-import { switchMap } from 'rxjs/operators'
-import { DocumentEntry, DocumentType } from 'src/domain/document'
+import { Observable, of, Subscription, throwError } from 'rxjs'
+import { flatMap } from 'rxjs/operators'
+import { DocumentEntry, DocumentType, documentTypesArray } from 'src/domain/document'
 
 export interface DeleteEvent {
   isNewDoc: boolean
   newDocId?: number
-  docId?: string
+  doc?: DocumentEntryItem
 }
 
 export interface UploadEvent {
@@ -39,7 +40,7 @@ export interface DocumentEntryItem extends DocumentEntry {
   templateUrl: './documents.component.html',
   styleUrls: ['./documents.component.scss']
 })
-export class DocumentsComponent implements OnInit {
+export class DocumentsComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
@@ -51,26 +52,37 @@ export class DocumentsComponent implements OnInit {
 
   private newDocumentId = 0
 
+  documentTypeFilter = new FormControl(null)
+  documentTypes = documentTypesArray
+  private sub = new Subscription()
+
   dogId: string
   dogName = ''
   newDocuments: NewDocument[] = []
 
+  allDocuments: DocumentEntryItem[] = []
+  filteredDocuments: DocumentEntryItem[] = []
+
 
   ngOnInit(): void {
     this.route.paramMap.pipe(
-      switchMap(param => {
+      flatMap(param => {
         this.dogId = param.get('dogId')
         this.dogName = param.get('dogName')
 
         if (this.dogId) {
-          return this.store.collection('dogs').doc(this.dogId).collection('documents', r => r.orderBy('documentDate')).get()
+          return of(this.dogId)
         } else {
           return throwError('Nincs dokumentum id megadva')
         }
       })
-    ).subscribe((data: QuerySnapshot<DocumentEntry>) => {
+    ).subscribe(() => this.refreshDocuments(), e => console.error(e))
 
-    })
+    this.sub.add(this.documentTypeFilter.valueChanges.subscribe((key: DocumentType) => this.filterDocuments(key)))
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe()
   }
 
   trackByItem(index: number, item: NewDocument) {
@@ -85,19 +97,49 @@ export class DocumentsComponent implements OnInit {
     ]
   }
 
-  private getDocumentId(evt: UploadEvent) {
-    const datePart = evt.date.format('YYYY_MM_DD')
-    return `${datePart}_${evt.type}`
+  private filterDocuments(typeKey: DocumentType) {
+    if (typeKey) {
+      this.filteredDocuments = this.allDocuments.filter(d => d.type === typeKey)
+    } else {
+      this.filteredDocuments = this.allDocuments
+    }
+  }
+
+  private refreshDocuments() {
+    this.store.collection('dogs').doc(this.dogId).collection('documents', r => r.orderBy('documentDate')).get()
+      .subscribe((data: QuerySnapshot<DocumentEntry>) => {
+        this.allDocuments = data.docs.map(d => {
+          const docData = d.data()
+          return {
+            docId: d.id,
+            downloadUrl: docData.downloadUrl,
+            type: docData.type,
+            createdBy: docData.createdBy,
+            createdAt: (docData.createdAt as any).toDate(),
+            documentDate: (docData.documentDate as any).toDate(),
+          }
+        })
+
+        this.filterDocuments(this.documentTypeFilter.value)
+      })
+  }
+
+  private getDocumentId(date: moment.Moment, type: DocumentType) {
+    const datePart = date.format('YYYY_MM_DD')
+    return `${datePart}_${type}`
   }
 
   private getDocumentFirebaseDoc(docId: string) {
     return this.store.collection('dogs').doc(this.dogId).collection('documents').doc<DocumentEntry>(docId)
   }
 
+  private getDocumentStorageRef(docId: string) {
+    return this.storage.ref(`dogs/${this.dogId}/documents/${docId}`)
+  }
+
   async upload(event: UploadEvent) {
     if (this.dogId) {
-      const docId = this.getDocumentId(event)
-      console.log('event', event, 'docit', docId)
+      const docId = this.getDocumentId(event.date, event.type)
       const docRef = this.getDocumentFirebaseDoc(docId)
       const doc = await docRef.get().toPromise()
       if (doc.exists) {
@@ -107,7 +149,7 @@ export class DocumentsComponent implements OnInit {
         return
       }
 
-      const storageRef = this.storage.ref(`dogs/${this.dogId}/documents/${docId}`)
+      const storageRef = this.getDocumentStorageRef(docId)
       const uploadTask = storageRef.put(event.file)
       this.syncNewDocuments(event.newDocId, { percentChange: uploadTask.percentageChanges(), uploadTask, errorMessage: undefined })
 
@@ -122,6 +164,7 @@ export class DocumentsComponent implements OnInit {
           createdBy: (await this.auth.currentUser).email
         })
         this.newDocuments = this.newDocuments.filter(d => d.newDocId !== event.newDocId)
+        this.refreshDocuments()
       } catch (e) {
         if (e.code === 'storage/canceled') {
           console.log('User cancelled upload')
@@ -143,12 +186,11 @@ export class DocumentsComponent implements OnInit {
   }
 
   private syncNewDocuments(newDocId: number, newDoc: Partial<NewDocument>) {
-    // do the manevour to make change detection work
+    // do the maneuver to make change detection work
     const updatedDocs = [...this.newDocuments]
     const spliceIdx = this.newDocuments.findIndex(d => d.newDocId === newDocId)
     const prevDoc = this.newDocuments[spliceIdx]
     updatedDocs.splice(spliceIdx, 1, { ...prevDoc, ...newDoc })
-    console.log('Old docs', this.newDocuments, 'new docs', updatedDocs)
     this.newDocuments = updatedDocs
   }
 
@@ -162,7 +204,20 @@ export class DocumentsComponent implements OnInit {
         return i.newDocId !== event.newDocId
       })
     } else {
-      console.log('Delete from storage')
+      const { doc } = event
+      const docId = this.getDocumentId(moment(doc.documentDate), doc.type)
+      const storageRef = this.getDocumentStorageRef(docId)
+      const storeRef = this.getDocumentFirebaseDoc(docId)
+
+      try {
+        await storageRef.delete().toPromise()
+        await storeRef.delete()
+        this.refreshDocuments()
+        this.snack.open('Dokumentum sikeresen törölve', 'Ok', { duration: 2000 })
+      } catch (e) {
+        console.error(e)
+        this.snack.open('Valami baj történt a dokumentum törlése közben', 'Ajaj')
+      }
     }
   }
 

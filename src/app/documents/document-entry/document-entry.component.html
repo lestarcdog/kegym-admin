@@ -1,15 +1,7 @@
 <mat-card id="container">
   <div id="meta-tags">
 
-    <mat-form-field appearance="fill">
-      <mat-label>Dokumentum típusa</mat-label>
-      <mat-select [formControl]="documentTypeSelect">
-        <mat-option *ngFor="let dt of documentTypes" [value]="dt.key">
-          {{dt.value}}
-        </mat-option>
-      </mat-select>
-      <mat-error>Kötelező választani</mat-error>
-    </mat-form-field>
+    <app-document-select [selectControl]="documentTypeSelect"></app-document-select>
 
     <mat-form-field appearance="fill">
       <mat-label>Dokumentum dátuma</mat-label>
@@ -21,18 +13,24 @@
     </mat-form-field>
 
   </div>
-  <div id="file-tags">
+  <!-- only of new document -->
+  <div id="file-tags" *ngIf="newEventId">
     <input accept=".doc,.docx,.pdf,.jpg,.jpeg" type="file" (change)="fileSelected($event.target.files)">
     <p *ngIf="selectedFile" id="file-details">Név: {{selectedFile?.name}} méret: {{selectedFileSize}}</p>
   </div>
 
-  <mat-progress-bar *ngIf="percentChange" id="progress-bar" [value]="percentChange | async"></mat-progress-bar>
+  <!-- download url for existing document -->
+  <div id="download-container" *ngIf="document">
+    <p>Feltöltve: {{document.createdAt | date:'medium'}} - Feltöltötte: {{document.createdBy}}</p>
+    <a [href]="document.downloadUrl" target="_blank">Letöltés</a>
+  </div>
 
+  <mat-progress-bar *ngIf="percentChange" id="progress-bar" [value]="percentChange | async"></mat-progress-bar>
 
   <mat-error *ngIf="errorMessage">{{errorMessage}}</mat-error>
   <mat-card-actions>
-    <button *ngIf="!document" [disabled]="!areFieldsValid() || percentChange" mat-raised-button color="primary" type="button"
-      (click)="startUpload()">Feltöltés</button>
+    <button *ngIf="!document" [disabled]="!areFieldsValid() || percentChange" mat-raised-button color="primary"
+      type="button" (click)="startUpload()">Feltöltés</button>
     <button mat-button color="warn" type="button" (click)="deleteDocument()">Törlés</button>
   </mat-card-actions>
 
