@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { TrainersService } from 'src/app/service/trainer.service';
 import { Trainer } from 'src/domain/dog';
 
@@ -9,7 +10,7 @@ import { Trainer } from 'src/domain/dog';
   templateUrl: './trainer-select.component.html',
   styleUrls: ['./trainer-select.component.scss']
 })
-export class TrainerSelectComponent {
+export class TrainerSelectComponent implements OnInit {
 
   @Input()
   controlName: string
@@ -17,14 +18,28 @@ export class TrainerSelectComponent {
   @Input()
   parentFormGroup: FormGroup
 
+  filteredTrainers: Observable<Trainer[]>
+
   constructor(private trainerService: TrainersService) { }
 
-  compareTrainer(t1: Trainer, t2: Trainer) {
-    return t1?.trainerId === t2?.trainerId
+
+  ngOnInit(): void {
+    const filterKey = this.parentFormGroup.get(this.controlName).valueChanges as Observable<string>
+    const initialFilterKey = filterKey.pipe(startWith(''))
+    this.filteredTrainers = combineLatest([this.trainerService.trainers, initialFilterKey])
+      .pipe(
+        map(([trainer, key]) => {
+          if (key) {
+            return trainer.filter(t => t.name.toLocaleLowerCase().includes(key))
+          } else {
+            return trainer
+          }
+        })
+      )
   }
 
-  get trainers(): Observable<Trainer[]> {
-    return this.trainerService.trainers
+  displayTrainerName(t: Trainer) {
+    return t?.name
   }
 
 }

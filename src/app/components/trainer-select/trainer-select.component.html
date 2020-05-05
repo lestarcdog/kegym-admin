@@ -1,9 +1,13 @@
 <mat-form-field appearance="fill" [formGroup]="parentFormGroup">
-  <mat-label>Kiképző</mat-label>
-  <mat-select [formControlName]="controlName" [compareWith]="compareTrainer">
-    <mat-option *ngFor="let trainer of (trainers | async)" [value]="trainer">
-      {{trainer.name}}
-    </mat-option>
-  </mat-select>
-  <mat-error>Kötelező mező</mat-error>
+
+    <mat-label>Kiképző</mat-label>
+    <input type="text" matInput [formControlName]="controlName" [matAutocomplete]="auto">
+    <mat-error>Kötelező mező</mat-error>
+
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayTrainerName">
+      <mat-option *ngFor="let trainer of (filteredTrainers | async)" [value]="trainer">
+        {{trainer.name}}
+      </mat-option>
+    </mat-autocomplete>
+
 </mat-form-field>

@@ -8,6 +8,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore'
 import { AngularFireStorageModule } from '@angular/fire/storage'
 import { ReactiveFormsModule } from '@angular/forms'
 import { MatMomentDateModule } from '@angular/material-moment-adapter'
+import { MatAutocompleteModule } from '@angular/material/autocomplete'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
 import { MatDateFormats, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core'
@@ -98,7 +99,8 @@ const dateFormat: MatDateFormats = {
     MatSliderModule,
     MatCardModule,
     MatProgressBarModule,
-    MatDividerModule
+    MatDividerModule,
+    MatAutocompleteModule
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'hu-HU' },
