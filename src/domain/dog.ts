@@ -34,12 +34,27 @@ export class Trainer {
   createdBy: string
 }
 
+export enum TrainingPlace {
+  HOME = 'Otthon',
+  TRAINER = 'Kiképzőnél'
+}
+
+export const trianingPlaceArray = Object.keys(TrainingPlace).map((key) => ({ key, value: TrainingPlace[key] }))
+
+export class TrainingMilestone {
+  trainingStartDate: Date
+  trainingPlace: TrainingPlace
+  handoverDate: Date
+  examDate: Date
+}
+
 export class Dog {
   name: string
   birthDate: Date
   breed: string
   dogSex: DogSex
   assistanceTypes: AssistanceDogType[]
+  trainingMileStones: TrainingMilestone
   chipNumber: string
   trainer: Trainer
   owner: Owner

@@ -46,7 +46,7 @@
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element">
-      <button mat-icon-button [routerLink]="['/dog', 'training', {dogId: element.docId, dogName: element.name}]"
+      <button mat-icon-button [routerLink]="['/dog', 'training', {dogId: element.docId}]"
         matTooltip="Képzési napló">
         <mat-icon>assignment</mat-icon>
       </button>

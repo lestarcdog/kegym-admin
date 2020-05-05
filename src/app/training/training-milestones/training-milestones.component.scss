@@ -1,0 +1,17 @@
+.mat-stepper-horizontal {
+  background-color: transparent;
+}
+
+form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  mat-radio-group {
+    margin: 0 15px;
+
+    mat-radio-button {
+      margin: 0 5px;
+    }
+  }
+}

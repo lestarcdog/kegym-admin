@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
-import { AngularFirestore, QuerySnapshot } from '@angular/fire/firestore'
+import { AngularFirestore, DocumentSnapshot, QuerySnapshot } from '@angular/fire/firestore'
 import { FormControl } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { ActivatedRoute } from '@angular/router'
 import { Subscription } from 'rxjs'
-import { map } from 'rxjs/operators'
+import { map, switchMap } from 'rxjs/operators'
+import { Dog } from 'src/domain/dog'
 import { TrainingEntry, trainingTypesArray } from 'src/domain/training'
 
 export interface TrainingEntryItem extends TrainingEntry {
@@ -19,7 +20,7 @@ export interface TrainingEntryItem extends TrainingEntry {
 export class TrainingComponent implements OnInit, OnDestroy {
 
   constructor(
-    private storage: AngularFirestore,
+    private store: AngularFirestore,
     private route: ActivatedRoute,
     private snack: MatSnackBar,
     private auth: AngularFireAuth
@@ -29,7 +30,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
   filteredEntries: TrainingEntryItem[] = []
   newEntry: TrainingEntryItem = undefined
   dogId: string
-  dogName = ''
+  dog: Dog
   loading = false
 
   private sub = new Subscription()
@@ -41,10 +42,13 @@ export class TrainingComponent implements OnInit, OnDestroy {
     this.route.paramMap.pipe(
       map(param => {
         this.dogId = param.get('dogId')
-        this.dogName = param.get('dogName')
         return this.dogId
-      })
-    ).subscribe(() => this.refreshEntries(), err => console.error(err))
+      }),
+      switchMap(dogId => this.store.collection('dogs').doc<Dog>(dogId).get())
+    ).subscribe((dog: DocumentSnapshot<Dog>) => {
+      this.dog = dog.data()
+      this.refreshEntries()
+    }, err => console.error(err))
 
     const filterSub = this.trainingTypeFilter.valueChanges.subscribe(key => this.filterEntries(key))
     this.sub.add(filterSub)
@@ -87,7 +91,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
   }
 
   private getDogDoc(dogId: string) {
-    return this.storage.collection('dogs').doc(dogId)
+    return this.store.collection('dogs').doc(dogId)
   }
 
   private getTrainingDoc(dogId: string, trainingId: string) {

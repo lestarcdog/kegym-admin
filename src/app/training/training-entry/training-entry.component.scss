@@ -13,6 +13,7 @@ form {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 #action-bar {
@@ -28,5 +29,5 @@ form {
 }
 
 #comment-field {
-  min-width: 400px;
+  min-width: 300px;
 }

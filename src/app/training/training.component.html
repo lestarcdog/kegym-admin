@@ -1,4 +1,9 @@
-<h1>{{dogName}} - edzés naplója</h1>
+<h1>{{dog?.name}} - edzés naplója</h1>
+
+<app-training-milestones></app-training-milestones>
+
+<mat-divider></mat-divider>
+
 <div id="container">
   <div>
     <button mat-raised-button color="primary" (click)="addNewEntry()" id="new-button">Új bejegyzés</button>
