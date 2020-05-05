@@ -44,5 +44,17 @@ form {
     }
   }
 
+  #assistanceTypeList {
+    margin: 0;
+
+    li, mat-icon {
+      line-height: 1em;
+    }
+
+    .mat-button {
+      padding: 0;
+      min-width: 0;
+    }
+  }
 
 }

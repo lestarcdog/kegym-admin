@@ -37,19 +37,24 @@
           </mat-form-field>
 
           <mat-form-field appearance="fill">
-            <mat-label>Munka típusa</mat-label>
-            <mat-select formControlName="assistanceType">
+            <mat-label>{{dogGroup.get('assistanceTypes')?.value.length}} kiválasztva</mat-label>
+            <mat-select [formControl]="singleAssistanceType">
               <mat-option *ngFor="let at of assistanceTypes" [value]="at.key">
                 {{at.value}}
               </mat-option>
             </mat-select>
-            <mat-error>Valamit kell dolgoznia</mat-error>
+            <mat-error *ngIf="dogGroup.get('assistanceTypes').invalid">Legalább egy valamit dolgozzon az a kutya</mat-error>
           </mat-form-field>
+
+          <ul id="assistanceTypeList">
+            <li *ngFor="let type of dogGroup.get('assistanceTypes').value">{{getAssistanceTypeName(type)}}
+              <a mat-button (click)="removeAssistanceTypeFromList(type)"><mat-icon>delete</mat-icon></a>
+            </li>
+          </ul>
 
           <mat-form-field appearance="fill">
             <mat-label>Chip szám</mat-label>
-            <input #chipNumberInput matInput maxlength="15" formControlName="chipNumber"
-              placeholder="15 számjegy">
+            <input #chipNumberInput matInput maxlength="15" formControlName="chipNumber" placeholder="15 számjegy">
             <mat-error>15 számjegyből álló mező</mat-error>
             <mat-hint>{{chipNumberInput.value?.length || 0}}/15</mat-hint>
           </mat-form-field>
@@ -87,7 +92,7 @@
       <div id="action-bar">
         <mat-error *ngIf="saveError">{{saveError}}</mat-error>
 
-        <button [disabled]="isSaving" mat-raised-button color="primary" type="submit">Mentés</button>
+        <button [disabled]="isSaving || dogGroup.invalid" mat-raised-button color="primary" type="submit">Mentés</button>
         <button *ngIf="originalDog" [disabled]="isSaving || dogGroup.pristine" mat-raised-button color="warn"
           type="button" (click)="confirmResetDog()">Visszaállít</button>
       </div>

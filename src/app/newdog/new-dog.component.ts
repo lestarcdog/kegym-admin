@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
 import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore'
-import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { ActivatedRoute, Router } from '@angular/router'
 import * as moment from 'moment'
 import { filter, map, switchMap } from 'rxjs/operators'
-import { asssistanceDogType, Dog, DogSex, dogSexArray, Trainer } from 'src/domain/dog'
+import { AssistanceDogType, asssistanceDogType, Dog, DogSex, dogSexArray, Trainer } from 'src/domain/dog'
 import { mapFirebaseDog } from '../service/mapper/dogMapper'
 
 interface DogForm {
@@ -14,7 +14,7 @@ interface DogForm {
   birthDate: moment.Moment
   breed: string
   dogSex: string
-  assistanceType: string
+  assistanceTypes: AssistanceDogType[]
   chipNumber: string
   trainer: Trainer
   owner: {
@@ -24,6 +24,8 @@ interface DogForm {
     email?: string
   }
 }
+
+const notEmptyList: ValidatorFn = (c: AbstractControl): ValidationErrors => c.value?.length > 0 ? null : { invalid: 'Üres lista' }
 
 @Component({
   styleUrls: ['./new-dog.component.scss'],
@@ -36,7 +38,7 @@ export class NewDogComponent implements OnInit {
     birthDate: new FormControl(null, Validators.required),
     breed: new FormControl(null, Validators.required),
     dogSex: new FormControl(null, Validators.required),
-    assistanceType: new FormControl(null, Validators.required),
+    assistanceTypes: new FormControl([], [Validators.required, notEmptyList]),
     chipNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{15}$/)]),
     trainer: new FormControl(null, Validators.required),
     owner: new FormGroup({
@@ -46,6 +48,8 @@ export class NewDogComponent implements OnInit {
       email: new FormControl(null, Validators.email)
     })
   })
+
+  singleAssistanceType = new FormControl(null)
 
   originalDogId: string | undefined
   originalDog: Dog | undefined
@@ -80,6 +84,29 @@ export class NewDogComponent implements OnInit {
         console.log('Doc document not exists', dogDoc)
       }
     })
+
+    this.singleAssistanceType.valueChanges.subscribe(v => {
+      if (v) {
+        const control = this.dogGroup.get('assistanceTypes')
+        const prevValue = control.value as AssistanceDogType[]
+        if (!prevValue.includes(v)) {
+          control.setValue([v, ...prevValue])
+        }
+        this.singleAssistanceType.reset()
+      }
+    })
+  }
+
+  removeAssistanceTypeFromList(id: string) {
+    const control = this.dogGroup.get('assistanceTypes')
+    const prevValue = control.value as AssistanceDogType[]
+    const filtered = prevValue.filter(i => i !== id)
+    control.setValue(filtered)
+  }
+
+
+  getAssistanceTypeName(id: string) {
+    return AssistanceDogType[id]
   }
 
   resetDog() {
@@ -90,7 +117,7 @@ export class NewDogComponent implements OnInit {
         birthDate: moment(this.originalDog.birthDate),
         breed: this.originalDog.breed || '',
         dogSex: this.originalDog.dogSex || '',
-        assistanceType: this.originalDog.assistanceType || '',
+        assistanceTypes: this.originalDog.assistanceTypes || [],
         chipNumber: this.originalDog.chipNumber || '',
         trainer: this.originalDog.trainer,
         owner: {
@@ -130,7 +157,7 @@ export class NewDogComponent implements OnInit {
       birthDate: value.birthDate.toDate(),
       breed: value.breed,
       dogSex: value.dogSex,
-      assistanceType: value.assistanceType,
+      assistanceTypes: value.assistanceTypes,
       chipNumber: value.chipNumber,
       owner: value.owner,
       trainer: value.trainer,
@@ -145,8 +172,8 @@ export class NewDogComponent implements OnInit {
         this.snackBar.open('Sikeres frissítés', 'Ok')
       } else {
         await this.storage.collection<Dog>('dogs').add(newDog)
-        this.dogGroup.reset({})
         this.snackBar.open('Sikeres mentés', 'Ok')
+        this.router.navigate(['/dog-list'])
       }
     } catch (e) {
       console.error(e)

@@ -10,7 +10,7 @@ export enum AssistanceDogType {
   FACILITY = 'Terápiás / Facility',
   PSYCHIATRIC = 'Személyisegítő / Psychiatric',
   MOBILITY = 'Mozgássegítő / Mobility',
-  HEARING = 'Halló / hearing',
+  HEARING = 'Halló / Hearing',
   THERAPY = 'Terápiás / Therapy',
   ALARM = 'Jelző / Alarm'
 }
@@ -39,7 +39,7 @@ export class Dog {
   birthDate: Date
   breed: string
   dogSex: DogSex
-  assistanceType: AssistanceDogType
+  assistanceTypes: AssistanceDogType[]
   chipNumber: string
   trainer: Trainer
   owner: Owner
