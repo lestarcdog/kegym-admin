@@ -6,19 +6,20 @@
   #dog-form-container {
     display: flex;
     justify-content: center;
-    flex: 3
+    flex: 4;
   }
 
   #dog-meta {
     display: flex;
     flex-direction: column;
+    flex: 1;
   }
 }
 
 form {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 100%;
 
   #form-inputs {
     display: flex;
@@ -40,14 +41,15 @@ form {
 
     button {
       margin: 0 15px;
-      flex: 1
+      flex: 1;
     }
   }
 
   #assistanceTypeList {
     margin: 0;
 
-    li, mat-icon {
+    li,
+    mat-icon {
       line-height: 1em;
     }
 
@@ -56,5 +58,4 @@ form {
       min-width: 0;
     }
   }
-
 }
