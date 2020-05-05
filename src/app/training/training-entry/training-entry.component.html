@@ -27,10 +27,11 @@
       <span id="progress-text">{{traningProgress.displayValue}} %</span>
     </div>
 
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill" id="comment-field">
       <mat-label>Megjegyzés</mat-label>
       <textarea matInput aria-multiline="true" matInput formControlName="comment"></textarea>
     </mat-form-field>
+
     <mat-card-actions>
       <button [disabled]="isSaving || entryGroup.invalid" mat-raised-button color="primary"
         type="submit">{{entry.docId ? 'Módosítás' : 'Mentés'}}</button>

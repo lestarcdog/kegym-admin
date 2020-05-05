@@ -76,6 +76,8 @@ export class TrainingEntryComponent {
       if (confirm(`Biztos benne hogy törli a ${date} - ${type} edzést`)) {
         this.delete.emit(this.entry.docId)
       }
+    } else {
+      this.delete.emit(undefined)
     }
   }
 
