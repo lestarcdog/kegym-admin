@@ -48,7 +48,7 @@
 
           <mat-form-field appearance="fill">
             <mat-label>Chip szám</mat-label>
-            <input #chipNumberInput matInput type="number" size="15" formControlName="chipNumber"
+            <input #chipNumberInput matInput maxlength="15" formControlName="chipNumber"
               placeholder="15 számjegy">
             <mat-error>15 számjegyből álló mező</mat-error>
             <mat-hint>{{chipNumberInput.value?.length || 0}}/15</mat-hint>
