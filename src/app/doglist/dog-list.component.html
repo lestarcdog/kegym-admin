@@ -16,6 +16,18 @@
     <td mat-cell *matCellDef="let element"> {{element.birthDate | date}} </td>
   </ng-container>
 
+  <ng-container matColumnDef="assistanceTypes">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Munka típus </th>
+    <td mat-cell *matCellDef="let element">
+      <span *ngIf="element.assistanceTypes?.length == 1">{{getAllAssistanceMultilineName(element)}}</span>
+      <ng-container *ngIf="element.assistanceTypes?.length  > 1">
+        <p [tooltip]="getAllAssistanceMultilineName(element)" max-width="500">
+          {{element.assistanceTypes?.length}} munkatípus
+        </p>
+      </ng-container>
+    </td>
+  </ng-container>
+
   <ng-container matColumnDef="owner">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Gazda </th>
     <td mat-cell *matCellDef="let element"> {{element.owner?.name}} </td>

@@ -37,7 +37,7 @@
           </mat-form-field>
 
           <mat-form-field appearance="fill">
-            <mat-label>{{dogGroup.get('assistanceTypes')?.value.length}} kiválasztva</mat-label>
+            <mat-label>Munka típus {{dogGroup.get('assistanceTypes')?.value.length}} kiválasztva</mat-label>
             <mat-select [formControl]="singleAssistanceType">
               <mat-option *ngFor="let at of assistanceTypes" [value]="at.key">
                 {{at.value}}

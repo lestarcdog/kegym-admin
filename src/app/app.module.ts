@@ -28,6 +28,7 @@ import { MatTooltipModule } from '@angular/material/tooltip'
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import 'moment'
+import { TooltipModule } from 'ng2-tooltip-directive'
 import { environment } from '../environments/environment'
 import { AppComponent } from './app.component'
 import { TrainerSelectComponent } from './components/trainer-select/trainer-select.component'
@@ -42,6 +43,7 @@ import { AppRoutingModule } from './routing.module'
 import { TrainersSettingsComponent } from './settings/trainers/trainers-settings.component'
 import { TrainingEntryComponent } from './training/training-entry/training-entry.component'
 import { TrainingComponent } from './training/training.component'
+
 
 registerLocaleData(hunLocal)
 
@@ -100,7 +102,10 @@ const dateFormat: MatDateFormats = {
     MatCardModule,
     MatProgressBarModule,
     MatDividerModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    // 3rd party modules
+    TooltipModule
+
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'hu-HU' },

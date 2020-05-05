@@ -7,7 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Dog } from 'src/domain/dog';
+import { AssistanceDogType, Dog } from 'src/domain/dog';
 import { mapFirebaseDog } from '../service/mapper/dogMapper';
 
 
@@ -20,7 +20,7 @@ class ListDog extends Dog {
   templateUrl: './dog-list.component.html'
 })
 export class DogListComponent implements OnInit, OnDestroy {
-  displayedColumns = ['name', 'birthDate', 'owner', 'phone', 'trainer', 'actions'];
+  displayedColumns = ['name', 'birthDate', 'assistanceTypes', 'owner', 'phone', 'trainer', 'actions'];
   dogList: MatTableDataSource<ListDog>
   filterKeyControl = new FormControl(null)
 
@@ -56,6 +56,10 @@ export class DogListComponent implements OnInit, OnDestroy {
         queryParams: { key },
       })
     }))
+  }
+
+  getAllAssistanceMultilineName(dog: ListDog) {
+    return dog.assistanceTypes.map(id => AssistanceDogType[id]).join('<br />')
   }
 
   ngOnDestroy(): void {
