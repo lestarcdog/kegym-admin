@@ -8,7 +8,7 @@
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
       <mat-error>Kötelező mező használd a naptár ikont.</mat-error>
-      <mat-hint>Használd a kis naptár ikont, kicsit jobbra.</mat-hint>
+      <mat-hint>Használd a kis naptár ikont</mat-hint>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -29,7 +29,7 @@
 
     <mat-form-field appearance="fill" id="comment-field">
       <mat-label>Megjegyzés</mat-label>
-      <textarea matInput aria-multiline="true" matInput formControlName="comment"></textarea>
+      <textarea matInput aria-multiline="true" matInput formControlName="comment" rows="3"></textarea>
     </mat-form-field>
 
     <mat-card-actions>
