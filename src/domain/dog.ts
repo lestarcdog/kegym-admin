@@ -26,10 +26,12 @@ export class Owner {
 }
 
 export class Trainer {
-  trainerId: number
+  trainerId: string
   name: string
   email: string
   phone: string
+  createdAt: Date
+  createdBy: string
 }
 
 export class Dog {

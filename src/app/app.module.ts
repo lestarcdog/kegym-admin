@@ -38,6 +38,7 @@ import { LoginComponent } from './login/login.component'
 import { NavComponent } from './nav/nav.component'
 import { NewDogComponent } from './newdog/new-dog.component'
 import { AppRoutingModule } from './routing.module'
+import { TrainersSettingsComponent } from './settings/trainers/trainers-settings.component'
 import { TrainingEntryComponent } from './training/training-entry/training-entry.component'
 import { TrainingComponent } from './training/training.component'
 
@@ -67,7 +68,8 @@ const dateFormat: MatDateFormats = {
     DocumentsComponent,
     DocumentEntryComponent,
     DocumentSelectComponent,
-    TrainerSelectComponent
+    TrainerSelectComponent,
+    TrainersSettingsComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,40 @@
+<h1>Kiképzők</h1>
+
+<button mat-raised-button color="primary" (click)="addNewEmptyTrainer()">Új kiképző</button>
+
+<ng-container>
+  <mat-card *ngFor="let trainer of trainersForm">
+    <form [formGroup]="trainer" (ngSubmit)="save(trainer)">
+      <mat-card-title>{{trainerName.value}}</mat-card-title>
+      <mat-card-subtitle *ngIf="trainer.value.createdAt">
+        Frissítve {{trainer.value.createdAt | date}} - {{trainer.value.createdBy}}
+      </mat-card-subtitle>
+      <mat-card-content id="form-container">
+        <mat-form-field appearance="fill">
+          <mat-label>Név</mat-label>
+          <input matInput formControlName="name" #trainerName>
+          <mat-error>Kötelező mező</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Telefonszám</mat-label>
+          <input matInput formControlName="phone" type="tel" placeholder="+3630 123-4567">
+          <mat-error *ngIf="trainer.get('phone').hasError('required')">Kötelező mező</mat-error>
+          <mat-error *ngIf="trainer.get('phone').hasError('invalid')">Hibás telefonszám formátum</mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email">
+          <mat-error>Hibás email formátum</mat-error>
+        </mat-form-field>
+
+      </mat-card-content>
+      <mat-card-actions>
+        <button [disabled]="trainer.invalid" mat-raised-button color="primary"
+          type="submit">{{trainer.get('trainerId').value ? 'Módosít' : 'Mentés'}}</button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</ng-container>
