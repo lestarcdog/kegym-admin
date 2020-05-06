@@ -4,6 +4,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { hunPhoneNumberValidator } from 'src/app/form/PhoneNumberValidator';
+import { firebaseToMomentDate } from 'src/app/service/time-util';
 import { Trainer } from 'src/domain/dog';
 
 @Component({
@@ -39,7 +40,7 @@ export class TrainersSettingsComponent implements OnInit {
       name: new FormControl(t?.name, Validators.required),
       email: new FormControl(t?.email, [Validators.email, Validators.required]),
       phone: new FormControl(t?.phone, hunPhoneNumberValidator),
-      createdAt: new FormControl((t?.createdAt as any)?.toDate()),
+      createdAt: new FormControl(firebaseToMomentDate(t?.createdAt)),
       createdBy: new FormControl(t?.createdBy),
     })
   }

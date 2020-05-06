@@ -1,3 +1,5 @@
+@use "src/colors";
+
 #new-entry-item {
   margin: 25px 0;
   border: gold 2px solid;
@@ -10,4 +12,13 @@
 
 .entry-item {
   margin: 10px 0;
+}
+
+.milestone-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.mat-expansion-panel {
+  background-color: colors.$lighter-green-bg;
 }

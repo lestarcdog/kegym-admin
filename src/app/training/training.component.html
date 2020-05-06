@@ -1,6 +1,17 @@
 <h1>{{dog?.name}} - edzés naplója</h1>
 
-<app-training-milestones></app-training-milestones>
+<ng-container *ngIf="dog">
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let type of dog.assistanceTypes">
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{getAssistanceTypeName(type)}} mérföldkövek</mat-panel-title>
+        <mat-panel-description>{{calcMilestoneHeader(type)}}</mat-panel-description>
+      </mat-expansion-panel-header>
+      <app-training-milestones [dogId]="dogId" [assistanceType]="type" [milestone]="getTrainingMilestoneOf(type)">
+      </app-training-milestones>
+    </mat-expansion-panel>
+  </mat-accordion>
+</ng-container>
 
 <mat-divider></mat-divider>
 

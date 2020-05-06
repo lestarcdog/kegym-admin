@@ -4,10 +4,14 @@ import { AngularFirestore, DocumentSnapshot, QuerySnapshot } from '@angular/fire
 import { FormControl } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { ActivatedRoute } from '@angular/router'
+import * as moment from 'moment'
 import { Subscription } from 'rxjs'
 import { map, switchMap } from 'rxjs/operators'
-import { Dog } from 'src/domain/dog'
+import { AssistanceDogType, Dog, TrainingMilestone } from 'src/domain/dog'
 import { TrainingEntry, trainingTypesArray } from 'src/domain/training'
+import { firebaseToMomentDate } from '../service/time-util'
+import { milestoneTimeDifference } from './milestone-time-diff'
+
 
 export interface TrainingEntryItem extends TrainingEntry {
   docId: string
@@ -86,6 +90,30 @@ export class TrainingComponent implements OnInit, OnDestroy {
     }, err => console.error(err))
   }
 
+  calcMilestoneHeader(type: AssistanceDogType): string {
+    if (this.dog && this.dog.trainingMileStones && this.dog.trainingMileStones[type]) {
+      const milestone = this.dog.trainingMileStones[type]
+      let date: moment.Moment
+      let preText: string
+      if (milestone.examDate) {
+        preText = 'Vizsga'
+        date = firebaseToMomentDate(milestone.examDate)
+      } else if (milestone.handoverDate) {
+        preText = 'Átadás'
+        date = firebaseToMomentDate(milestone.handoverDate)
+      } else if (milestone.trainingStartDate) {
+        preText = 'Kiképzés'
+        date = firebaseToMomentDate(milestone.trainingStartDate)
+      } else {
+        return 'Nem kezdődött el a kiképzés'
+      }
+
+      return `${preText}${milestoneTimeDifference(date)}`
+    } else {
+      return 'Nem kezdődött el a kiképzés'
+    }
+  }
+
   private getAllEntries(dogId: string) {
     return this.getDogDoc(dogId).collection('training', r => r.orderBy('date', 'desc')).get()
   }
@@ -96,6 +124,14 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   private getTrainingDoc(dogId: string, trainingId: string) {
     return this.getDogDoc(dogId).collection('training').doc<TrainingEntry>(trainingId)
+  }
+
+  getTrainingMilestoneOf(id: AssistanceDogType): TrainingMilestone | undefined {
+    return this.dog && this.dog.trainingMileStones ? this.dog.trainingMileStones[id] : undefined
+  }
+
+  getAssistanceTypeName(id: AssistanceDogType) {
+    return AssistanceDogType[id]
   }
 
   addNewEntry() {

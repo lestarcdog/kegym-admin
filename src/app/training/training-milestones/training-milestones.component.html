@@ -1,45 +1,48 @@
-<mat-horizontal-stepper [linear]="true" #stepper>
-  <mat-step [stepControl]="trainingStartForm">
-    <form [formGroup]="trainingStartForm">
-      <ng-template matStepLabel>Kiképzés kezdete<em>{{calcDateDiffNow(trainingStartForm, 'trainingStartDate')}}</em></ng-template>
+<mat-horizontal-stepper [linear]="true" [selectedIndex]="selectedStepIndex">
+  <mat-step [stepControl]="trainingStartForm" [completed]="completedSteps[0]">
+    <form [formGroup]="trainingStartForm" (ngSubmit)="updateTrainingStart()">
+      <ng-template matStepLabel>Kiképzés kezdete<em>{{calcDateDiffNow(trainingStartForm, 'trainingStartDate')}}</em>
+      </ng-template>
       <mat-form-field appearance="fill">
         <mat-label>Dátum</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="trainingStartDate">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
+        <input matInput [matDatepicker]="trainingStartDatePicker" formControlName="trainingStartDate">
+        <mat-datepicker-toggle matSuffix [for]="trainingStartDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #trainingStartDatePicker></mat-datepicker>
         <mat-error>Kötelező mező használd a naptár ikont.</mat-error>
         <mat-hint>Használd a kis naptár ikont</mat-hint>
       </mat-form-field>
       <mat-radio-group formControlName="trainingPlace">
         <mat-radio-button *ngFor="let place of trainingPlaces" [value]="place.key">{{place.value}}</mat-radio-button>
       </mat-radio-group>
-      <button mat-raised-button color="primary">Mentés</button>
+      <button mat-raised-button color="primary" type="submit">Mentés</button>
     </form>
   </mat-step>
-  <mat-step [stepControl]="handoverForm">
-    <form [formGroup]="handoverForm">
-      <ng-template matStepLabel>Átadás</ng-template>
+  <mat-step [stepControl]="handoverForm" [completed]="completedSteps[1]">
+    <form [formGroup]="handoverForm" (ngSubmit)="updateHandover()">
+      <ng-template matStepLabel>Átadás<em>{{calcDateDiffNow(handoverForm, 'handoverDate')}}</em></ng-template>
       <mat-form-field appearance="fill">
         <mat-label>Dátum</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="handoverDate">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
+        <input matInput [matDatepicker]="handoverDatePicker" formControlName="handoverDate">
+        <mat-datepicker-toggle matSuffix [for]="handoverDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #handoverDatePicker></mat-datepicker>
         <mat-error>Kötelező mező használd a naptár ikont.</mat-error>
         <mat-hint>Használd a kis naptár ikont</mat-hint>
       </mat-form-field>
+      <button mat-raised-button color="primary" type="submit">Mentés</button>
     </form>
   </mat-step>
-  <mat-step [stepControl]="examForm">
-    <form [formGroup]="examForm">
-      <ng-template matStepLabel>Vizsga</ng-template>
+  <mat-step [stepControl]="examForm" [completed]="completedSteps[2]">
+    <form [formGroup]="examForm" (ngSubmit)="updateExam()">
+      <ng-template matStepLabel>Vizsga<em>{{calcDateDiffNow(examForm, 'examDate')}}</em></ng-template>
       <mat-form-field appearance="fill">
         <mat-label>Dátum</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="examDate">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
+        <input matInput [matDatepicker]="examDatePicker" formControlName="examDate">
+        <mat-datepicker-toggle matSuffix [for]="examDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #examDatePicker></mat-datepicker>
         <mat-error>Kötelező mező használd a naptár ikont.</mat-error>
         <mat-hint>Használd a kis naptár ikont</mat-hint>
       </mat-form-field>
+      <button mat-raised-button color="primary" type="submit">Mentés</button>
     </form>
   </mat-step>
 </mat-horizontal-stepper>

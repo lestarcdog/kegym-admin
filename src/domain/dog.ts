@@ -42,10 +42,12 @@ export enum TrainingPlace {
 export const trianingPlaceArray = Object.keys(TrainingPlace).map((key) => ({ key, value: TrainingPlace[key] }))
 
 export class TrainingMilestone {
-  trainingStartDate: Date
-  trainingPlace: TrainingPlace
-  handoverDate: Date
-  examDate: Date
+  trainingStartDate?: Date
+  trainingPlace?: TrainingPlace
+  handoverDate?: Date
+  examDate?: Date
+  createdAt: Date
+  createdBy: string
 }
 
 export class Dog {
@@ -54,7 +56,10 @@ export class Dog {
   breed: string
   dogSex: DogSex
   assistanceTypes: AssistanceDogType[]
-  trainingMileStones: TrainingMilestone
+  trainingMileStones: {
+    // Key of the AssistanceDogType
+    [key: string]: TrainingMilestone
+  }
   chipNumber: string
   trainer: Trainer
   owner: Owner
