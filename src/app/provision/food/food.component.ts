@@ -1,13 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FoodEntryItem, NewFoodEvent } from '../provision.component';
 
 @Component({
   selector: 'app-food',
   templateUrl: './food.component.html',
-  styleUrls: ['./food.component.scss']
+  styleUrls: ['../sub-panel.scss']
 })
-export class FoodComponent implements OnInit {
+export class FoodComponent {
 
   @Input()
   foods: FoodEntryItem[]
@@ -27,11 +27,6 @@ export class FoodComponent implements OnInit {
   })
 
   showFoodForm = false
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
 
   addNewFood() {
     if (!this.showFoodForm) {

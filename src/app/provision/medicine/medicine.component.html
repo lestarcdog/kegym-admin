@@ -1,1 +1,53 @@
-<p>medicine works!</p>
+<mat-hint>Minden egyes gyógyszer beadást fel kell jegyezni.</mat-hint>
+<div id="new-button-container">
+  <button mat-raised-button color="primary" (click)="addNewMedicine()">Új gyógyszerelés</button>
+</div>
+
+<form *ngIf="showMedicineForm" [formGroup]="medicineForm" (ngSubmit)="saveMedicine()">
+  <div id="fields">
+    <mat-form-field appearance="fill">
+      <mat-label>Gyógyszerelés ideje</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="date" data-lpignore="true">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error>Kötelező mező használd a naptár ikont.</mat-error>
+      <mat-hint>Használd a kis naptár ikont</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Készítmény neve</mat-label>
+      <input matInput formControlName="medicine">
+      <mat-error>Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Megjegyzés</mat-label>
+      <textarea matInput formControlName="comment"></textarea>
+    </mat-form-field>
+
+  </div>
+  <div id="action-buttons">
+    <button mat-raised-button color="primary" type="submit">Mentés</button>
+    <button mat-button color="warn" type="reset" (click)="clearNewFood()">Törlés</button>
+  </div>
+</form>
+
+<mat-card *ngFor="let medicine of medicines">
+  <mat-card-content>
+    <div>
+      <p>Gyógyszerelés ideje:</p>
+      <p>Készítmény neve:</p>
+      <p *ngIf="medicine.comment">Megjegyzés:</p>
+      <p>Létrehozta:</p>
+    </div>
+    <div>
+      <p>{{ medicine.date | date:'mediumDate'}}</p>
+      <p>{{ medicine.medicine }}</p>
+      <p *ngIf="medicine.comment">{{ medicine.comment }}</p>
+      <p>{{ medicine.createdAt | date:'medium'}} - {{ medicine.createdBy }}</p>
+    </div>
+  </mat-card-content>
+  <mat-action-row>
+    <button mat-button color="warn" (click)="removeMedicine(medicine.docId)">Törlés</button>
+  </mat-action-row>
+</mat-card>

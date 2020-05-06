@@ -1,6 +1,6 @@
 @use "src/colors";
 
-#new-food-button-container {
+#new-button-container {
   margin-top: 20px;
 }
 
@@ -39,7 +39,7 @@ form {
   border: gold 2px solid;
   padding: 10px;
 
-  #food-fields {
+  #fields {
     flex-direction: row;
     mat-form-field {
       margin: 0 5px;

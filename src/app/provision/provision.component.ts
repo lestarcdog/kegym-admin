@@ -126,12 +126,12 @@ export class ProvisionComponent implements OnInit {
   }
 
   async removeFood(docId: string) {
-    this.removeItem(docId, FOOD_COLLECTION)
+    await this.removeItem(docId, FOOD_COLLECTION)
     this.refreshFoods()
   }
 
   async removeMedicine(docId: string) {
-    this.removeItem(docId, MEDICINE_COLLECTION)
+    await this.removeItem(docId, MEDICINE_COLLECTION)
     this.refreshMedicine()
   }
 

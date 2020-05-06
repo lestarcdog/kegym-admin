@@ -1,11 +1,11 @@
 <mat-hint>Nem kell minden egyest étkezést felvinni. Új étrendet akkor kell hozzáadni ha változik az adag mennyisége vagy
   a kutya súlya.</mat-hint>
-<div id="new-food-button-container">
+<div id="new-button-container">
   <button mat-raised-button color="primary" (click)="addNewFood()">Új étrend</button>
 </div>
 
 <form *ngIf="showFoodForm" [formGroup]="foodForm" (ngSubmit)="saveFood()">
-  <div id="food-fields">
+  <div id="fields">
     <mat-form-field appearance="fill">
       <mat-label>Új étrend kezdete</mat-label>
       <input matInput [matDatepicker]="picker" formControlName="date" data-lpignore="true">
@@ -59,7 +59,7 @@
       <p>Létrehozta:</p>
     </div>
     <div>
-      <p>{{ food.date | date:'medium'}}</p>
+      <p>{{ food.date | date:'mediumDate'}}</p>
       <p>{{ food.foodName }} - {{ food.foodPortion }}g</p>
       <p>{{ food.dogWeight }}kg</p>
       <p *ngIf="food.comment">{{ food.comment }}</p>
