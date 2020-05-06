@@ -5,6 +5,7 @@ import { DocumentsComponent } from './documents/documents.component'
 import { DogListComponent } from './doglist/dog-list.component'
 import { LoginComponent } from './login/login.component'
 import { NewDogComponent } from './newdog/new-dog.component'
+import { ProvisionComponent } from './provision/provision.component'
 import { TrainersSettingsComponent } from './settings/trainers/trainers-settings.component'
 import { TrainingComponent } from './training/training.component'
 
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'dog/:dogId/edit', component: NewDogComponent, ...canActivate(redirectUnauthorizedToLogin)},
   { path: 'dog/training', component: TrainingComponent, ...canActivate(redirectUnauthorizedToLogin)},
   { path: 'dog/documents', component: DocumentsComponent, ...canActivate(redirectUnauthorizedToLogin)},
+  { path: 'dog/provision', component: ProvisionComponent, ...canActivate(redirectUnauthorizedToLogin)},
   { path: 'trainers', component: TrainersSettingsComponent, ...canActivate(redirectUnauthorizedToLogin)},
   { path: '**', redirectTo: 'dog-list' },
 

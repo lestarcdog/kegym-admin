@@ -16,6 +16,7 @@ import { DogListComponent } from './doglist/dog-list.component'
 import { LoginComponent } from './login/login.component'
 import { NavComponent } from './nav/nav.component'
 import { NewDogComponent } from './newdog/new-dog.component'
+import { ProvisionModule } from './provision/provision.module'
 import { AppRoutingModule } from './routing.module'
 import { TrainersSettingsComponent } from './settings/trainers/trainers-settings.component'
 import { SharedModule } from './shared.module'
@@ -54,7 +55,8 @@ const dateFormat: MatDateFormats = {
     BrowserAnimationsModule,
     AngularFireModule.initializeApp(environment.firebase),
     SharedModule,
-    TrainingModule
+    TrainingModule,
+    ProvisionModule
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'hu-HU' },

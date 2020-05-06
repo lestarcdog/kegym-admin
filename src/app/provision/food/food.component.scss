@@ -1,0 +1,56 @@
+@use "src/colors";
+
+#new-food-button-container {
+  margin-top: 20px;
+}
+
+mat-card {
+  background: colors.$lighter-green-bg;
+  margin: 10px 0;
+
+  mat-card-content {
+    display: flex;
+    flex-direction: row;
+
+    div:nth-child(1) {
+      text-align: right;
+      p {
+        font-weight: 600;
+      }
+    }
+
+    p {
+      margin: 0;
+    }
+
+    div {
+      padding: 0 5px;
+    }
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  background: colors.$lighter-green-bg;
+
+  margin: 30px 0;
+  border-radius: 5px;
+  border: gold 2px solid;
+  padding: 10px;
+
+  #food-fields {
+    flex-direction: row;
+    mat-form-field {
+      margin: 0 5px;
+    }
+  }
+
+  #action-buttons {
+    margin-top: 10px;
+  }
+
+  button {
+    margin: 0 15px;
+  }
+}

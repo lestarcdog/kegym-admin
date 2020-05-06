@@ -24,8 +24,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatSortModule } from '@angular/material/sort'
 import { MatStepperModule } from '@angular/material/stepper'
 import { MatTableModule } from '@angular/material/table'
+import { MatTabsModule } from '@angular/material/tabs'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { TooltipModule } from 'ng2-tooltip-directive'
+
+
 
 
 const modules = [
@@ -57,6 +60,7 @@ const modules = [
   MatStepperModule,
   MatRadioModule,
   MatExpansionModule,
+  MatTabsModule,
   // 3rd party modules
   TooltipModule
 ]

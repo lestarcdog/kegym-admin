@@ -6,8 +6,21 @@ export function firebaseToMomentDate(fb: any) {
   }
   // usually it is firebase.firestore.Timestamp
   if (typeof fb.toDate === 'function') {
-    return moment((fb as any).toDate())
+    return moment(fb.toDate())
   } else {
     return moment(fb)
+  }
+}
+
+export function firebaseToDate(fb: any) {
+  if (!fb) {
+    return undefined
+  }
+
+  if (typeof fb.toDate === 'function') {
+    return fb.toDate()
+  } else {
+    console.warn('Could not parse object to date', fb)
+    return undefined
   }
 }

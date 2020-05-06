@@ -1,0 +1,72 @@
+<mat-hint>Nem kell minden egyest étkezést felvinni. Új étrendet akkor kell hozzáadni ha változik az adag mennyisége vagy
+  a kutya súlya.</mat-hint>
+<div id="new-food-button-container">
+  <button mat-raised-button color="primary" (click)="addNewFood()">Új étrend</button>
+</div>
+
+<form *ngIf="showFoodForm" [formGroup]="foodForm" (ngSubmit)="saveFood()">
+  <div id="food-fields">
+    <mat-form-field appearance="fill">
+      <mat-label>Új étrend kezdete</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="date" data-lpignore="true">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error>Kötelező mező használd a naptár ikont.</mat-error>
+      <mat-hint>Használd a kis naptár ikont</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Étel/Táp neve</mat-label>
+      <input matInput formControlName="foodName">
+      <mat-error>Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Étel adag</mat-label>
+      <input type="number" matInput formControlName="foodPortion">
+      <span matSuffix>g</span>
+      <mat-error>Kötelező mező és egyen is a kutya pozitívan</mat-error>
+      <mat-hint>Étel adag grammban megadva</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Kutya súlya</mat-label>
+      <input type="number" matInput formControlName="dogWeight">
+      <span matSuffix>kg</span>
+      <mat-error>Nem feketelyuk a kutya pozitív a súlya és 100kg-nál nagyobb kutya nincs</mat-error>
+      <mat-hint>Kutya súlya kilogrammban</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Megjegyzés</mat-label>
+      <textarea matInput formControlName="comment"></textarea>
+    </mat-form-field>
+
+  </div>
+  <div id="action-buttons">
+    <button mat-raised-button color="primary" type="submit">Mentés</button>
+    <button mat-button color="warn" type="reset" (click)="clearNewFood()">Törlés</button>
+  </div>
+</form>
+
+<mat-card *ngFor="let food of foods">
+  <mat-card-content>
+    <div>
+      <p>Étrend kezdete:</p>
+      <p>Étel/táp neve:</p>
+      <p>Kutya súlya:</p>
+      <p *ngIf="food.comment">Megjegyzés:</p>
+      <p>Létrehozta:</p>
+    </div>
+    <div>
+      <p>{{ food.date | date:'medium'}}</p>
+      <p>{{ food.foodName }} - {{ food.foodPortion }}g</p>
+      <p>{{ food.dogWeight }}kg</p>
+      <p *ngIf="food.comment">{{ food.comment }}</p>
+      <p>{{ food.createdAt | date:'medium'}} - {{ food.createdBy }}</p>
+    </div>
+  </mat-card-content>
+  <mat-action-row>
+    <button mat-button color="warn" (click)="removeFood(food.docId)">Törlés</button>
+  </mat-action-row>
+</mat-card>

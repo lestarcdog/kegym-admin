@@ -1,0 +1,13 @@
+<h1>{{dogName}} - etetési napló</h1>
+
+<mat-tab-group>
+  <mat-tab label="Etetés">
+    <app-food [foods]="foods" (delete)="removeFood($event)" (save)="newFoodEvent($event)"></app-food>
+  </mat-tab>
+  <mat-tab label="Gyógyszerelés">
+    <app-medicine [medicines]="medicines"></app-medicine>
+  </mat-tab>
+  <mat-tab label="Grafikon">
+    Nincs még
+  </mat-tab>
+</mat-tab-group>
