@@ -1,37 +1,43 @@
 <mat-card id="container">
-  <div id="meta-tags">
+  <div id="data">
+    <div id="meta-tags">
 
-    <app-document-select [selectControl]="documentTypeSelect"></app-document-select>
+      <app-document-select [selectControl]="documentTypeSelect"></app-document-select>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Dokumentum dátuma</mat-label>
-      <input matInput [matDatepicker]="picker" [formControl]="documentDate">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-      <mat-error>Kötelező mező használd a naptár ikont.</mat-error>
-      <mat-hint>Használd a kis naptár ikont</mat-hint>
-    </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Dokumentum dátuma</mat-label>
+        <input matInput [matDatepicker]="picker" [formControl]="documentDate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error>Kötelező mező használd a naptár ikont.</mat-error>
+        <mat-hint>Használd a kis naptár ikont</mat-hint>
+      </mat-form-field>
 
+    </div>
+    <!-- only of new document -->
+    <div id="file-tags" *ngIf="newEventId">
+      <input accept=".doc,.docx,.pdf,.jpg,.jpeg" type="file" (change)="fileSelected($event.target.files)">
+      <p *ngIf="selectedFile" id="file-details">Név: {{selectedFile?.name}} méret: {{selectedFileSize}}</p>
+    </div>
+
+    <!-- download url for existing document -->
+    <div id="download-container" *ngIf="document">
+      <p>Feltöltve: {{document.createdAt | date:'medium'}} - Feltöltötte: {{document.createdBy}}</p>
+      <a [href]="document.downloadUrl" target="_blank">Letöltés</a>
+    </div>
+
+    <mat-progress-bar *ngIf="percentChange" id="progress-bar" [value]="percentChange | async"></mat-progress-bar>
+
+    <mat-error *ngIf="errorMessage">{{errorMessage}}</mat-error>
+    <mat-card-actions>
+      <button *ngIf="!document" [disabled]="!areFieldsValid() || percentChange" mat-raised-button color="primary"
+        type="button" (click)="startUpload()">Feltöltés</button>
+      <button mat-button color="warn" type="button" (click)="deleteDocument()">Törlés</button>
+    </mat-card-actions>
   </div>
-  <!-- only of new document -->
-  <div id="file-tags" *ngIf="newEventId">
-    <input accept=".doc,.docx,.pdf,.jpg,.jpeg" type="file" (change)="fileSelected($event.target.files)">
-    <p *ngIf="selectedFile" id="file-details">Név: {{selectedFile?.name}} méret: {{selectedFileSize}}</p>
+  <div id="preview" *ngIf="sanitizedDocumentUrl">
+    <object *ngIf="document.fileType.includes('pdf')" height="250" width="550" [data]="sanitizedDocumentUrl" [type]="document.fileType"></object>
+    <img *ngIf="document.fileType.includes('jpg') || document.fileType.includes('jpeg')" [src]="sanitizedDocumentUrl" height="250" width="auto" />
   </div>
-
-  <!-- download url for existing document -->
-  <div id="download-container" *ngIf="document">
-    <p>Feltöltve: {{document.createdAt | date:'medium'}} - Feltöltötte: {{document.createdBy}}</p>
-    <a [href]="document.downloadUrl" target="_blank">Letöltés</a>
-  </div>
-
-  <mat-progress-bar *ngIf="percentChange" id="progress-bar" [value]="percentChange | async"></mat-progress-bar>
-
-  <mat-error *ngIf="errorMessage">{{errorMessage}}</mat-error>
-  <mat-card-actions>
-    <button *ngIf="!document" [disabled]="!areFieldsValid() || percentChange" mat-raised-button color="primary"
-      type="button" (click)="startUpload()">Feltöltés</button>
-    <button mat-button color="warn" type="button" (click)="deleteDocument()">Törlés</button>
-  </mat-card-actions>
 
 </mat-card>

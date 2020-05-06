@@ -16,6 +16,7 @@ export const documentTypesArray = Object.keys(DocumentType).map((key) => ({ key,
 export class DocumentEntry {
   type: DocumentType
   downloadUrl: string
+  fileType: string
   documentDate: Date
   createdAt: Date
   createdBy: string

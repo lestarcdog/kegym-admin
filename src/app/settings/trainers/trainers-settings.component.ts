@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { hunPhoneNumberValidator } from 'src/app/form/PhoneNumberValidator';
+import { hunPhoneNumberValidator } from 'src/app/service/phone-number-validator';
 import { firebaseToMomentDate } from 'src/app/service/time-util';
 import { Trainer } from 'src/domain/dog';
 

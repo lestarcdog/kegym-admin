@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
 import * as moment from 'moment'
 import { Observable } from 'rxjs'
 import { documentTypesArray } from 'src/domain/document'
@@ -14,7 +15,8 @@ import { DeleteEvent, DocumentEntryItem, UploadEvent } from '../documents.compon
 export class DocumentEntryComponent implements OnInit {
 
   constructor(
-    private changeRef: ChangeDetectorRef
+    private changeRef: ChangeDetectorRef,
+    private sanitizer: DomSanitizer
   ) { }
 
   documentTypes = documentTypesArray
@@ -39,6 +41,8 @@ export class DocumentEntryComponent implements OnInit {
    */
   document: DocumentEntryItem
 
+  sanitizedDocumentUrl?: SafeUrl
+
   @Input('document')
   set setDocument(doc: DocumentEntryItem) {
     this.document = doc
@@ -46,6 +50,10 @@ export class DocumentEntryComponent implements OnInit {
     this.documentTypeSelect.disable()
     this.documentDate.setValue(moment(doc.documentDate))
     this.documentDate.disable()
+
+    if (this.document?.downloadUrl) {
+      this.sanitizedDocumentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.document.downloadUrl)
+    }
   }
 
   @Input()

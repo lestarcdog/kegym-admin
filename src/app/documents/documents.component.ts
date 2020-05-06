@@ -114,6 +114,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
             docId: d.id,
             downloadUrl: docData.downloadUrl,
             type: docData.type,
+            fileType: docData.fileType || 'application/pdf',
             createdBy: docData.createdBy,
             createdAt: (docData.createdAt as any).toDate(),
             documentDate: (docData.documentDate as any).toDate(),
@@ -124,9 +125,10 @@ export class DocumentsComponent implements OnInit, OnDestroy {
       })
   }
 
-  private getDocumentId(date: moment.Moment, type: DocumentType) {
+  private getDocumentName(date: moment.Moment, type: DocumentType, filename: string) {
     const datePart = date.format('YYYY_MM_DD')
-    return `${datePart}_${type}`
+    const ext = filename.split('.').pop()
+    return `${datePart}_${type}.${ext}`
   }
 
   private getDocumentFirebaseDoc(docId: string) {
@@ -139,7 +141,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
   async upload(event: UploadEvent) {
     if (this.dogId) {
-      const docId = this.getDocumentId(event.date, event.type)
+      const docId = this.getDocumentName(event.date, event.type, event.file.name)
       const docRef = this.getDocumentFirebaseDoc(docId)
       const doc = await docRef.get().toPromise()
       if (doc.exists) {
@@ -159,6 +161,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
         docRef.set({
           documentDate: event.date.toDate(),
           downloadUrl,
+          fileType: event.file.type,
           type: event.type,
           createdAt: new Date(),
           createdBy: (await this.auth.currentUser).email
@@ -205,9 +208,8 @@ export class DocumentsComponent implements OnInit, OnDestroy {
       })
     } else {
       const { doc } = event
-      const docId = this.getDocumentId(moment(doc.documentDate), doc.type)
-      const storageRef = this.getDocumentStorageRef(docId)
-      const storeRef = this.getDocumentFirebaseDoc(docId)
+      const storageRef = this.getDocumentStorageRef(doc.docId)
+      const storeRef = this.getDocumentFirebaseDoc(doc.docId)
 
       try {
         await storageRef.delete().toPromise()
