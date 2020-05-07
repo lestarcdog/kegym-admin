@@ -54,6 +54,8 @@ export class ProvisionComponent implements OnInit {
   foods: FoodEntryItem[]
   medicines: MedicineEntryItem[]
 
+  selectedTabIdx = 0
+
   ngOnInit(): void {
     this.route.paramMap.pipe(
       map(params => {

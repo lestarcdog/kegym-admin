@@ -1,6 +1,6 @@
 <h1>{{dogName}} - etetési napló</h1>
 
-<mat-tab-group>
+<mat-tab-group (selectedIndexChange)="selectedTabIdx = $event">
   <mat-tab label="Etetés">
     <app-food [foods]="foods" (delete)="removeFood($event)" (save)="newFoodEvent($event)"></app-food>
   </mat-tab>
@@ -9,6 +9,6 @@
     </app-medicine>
   </mat-tab>
   <mat-tab label="Grafikon">
-    Nincs még
+    <app-chart [foods]="foods" [hasFocus]="selectedTabIdx === 2"></app-chart>
   </mat-tab>
 </mat-tab-group>
