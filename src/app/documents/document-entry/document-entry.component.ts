@@ -41,6 +41,8 @@ export class DocumentEntryComponent implements OnInit {
    */
   document: DocumentEntryItem
 
+  showPreview = false
+
   sanitizedDocumentUrl?: SafeUrl
 
   @Input('document')
@@ -63,6 +65,7 @@ export class DocumentEntryComponent implements OnInit {
   percentChange: Observable<number>
 
   ngOnInit(): void {
+    this.showPreview = window.innerWidth > 400
   }
 
   startUpload() {

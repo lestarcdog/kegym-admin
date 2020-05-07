@@ -35,7 +35,7 @@
       <button mat-button color="warn" type="button" (click)="deleteDocument()">Törlés</button>
     </mat-card-actions>
   </div>
-  <div id="preview" *ngIf="sanitizedDocumentUrl">
+  <div id="preview" *ngIf="sanitizedDocumentUrl && showPreview">
     <object *ngIf="document.fileType.includes('pdf')" height="250" width="550" [data]="sanitizedDocumentUrl" [type]="document.fileType"></object>
     <img *ngIf="document.fileType.includes('jpg') || document.fileType.includes('jpeg')" [src]="sanitizedDocumentUrl" height="250" width="auto" />
   </div>
