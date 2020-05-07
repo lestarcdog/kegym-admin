@@ -15,12 +15,15 @@ class ListDog extends Dog {
   docId: string
 }
 
+const fullColumns = ['name', 'birthDate', 'assistanceTypes', 'owner', 'phone', 'trainer', 'actions'];
+const shortColumns = ['name', 'owner', 'actions']
+
 @Component({
   styleUrls: ['./dog-list.component.scss'],
   templateUrl: './dog-list.component.html'
 })
 export class DogListComponent implements OnInit, OnDestroy {
-  displayedColumns = ['name', 'birthDate', 'assistanceTypes', 'owner', 'phone', 'trainer', 'actions'];
+  displayedColumns = [];
   dogList: MatTableDataSource<ListDog>
   filterKeyControl = new FormControl(null)
 
@@ -29,9 +32,16 @@ export class DogListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort, { static: true })
   sort: MatSort;
 
-  constructor(private store: AngularFirestore, private router: Router, private route: ActivatedRoute) { }
+  isMobile
+
+  constructor(
+    private store: AngularFirestore,
+    private router: Router, private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
+    this.displayedColumns = window.innerWidth < 400 ? shortColumns : fullColumns
+
     this.filterKeyControl.disable()
 
     this.store.collection<Dog>('dogs').get().subscribe((snapshot: QuerySnapshot<Dog>) => {

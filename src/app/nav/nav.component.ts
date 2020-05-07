@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
-import { Router } from '@angular/router'
+import { NavigationEnd, Router } from '@angular/router'
+import { filter } from 'rxjs/operators'
 
 @Component({
   selector: 'app-navmenu',
@@ -12,9 +13,19 @@ export class NavComponent implements OnInit {
   constructor(private auth: AngularFireAuth, private router: Router) { }
 
   currentUserName = ''
+  sideNavOpen = false
+  showBackToList = false
 
   ngOnInit(): void {
-    this.auth.user.subscribe(u => this.currentUserName = u?.email)
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd)
+    ).subscribe((e: NavigationEnd) => {
+      this.showBackToList = e.url !== '/dog-list'
+    })
+    this.auth.user.subscribe(u => {
+      this.currentUserName = u?.email
+      this.sideNavOpen = true
+    })
   }
 
   async logout() {

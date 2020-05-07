@@ -1,5 +1,7 @@
 @use "src/colors";
 
+$content-padding: 15px;
+
 mat-sidenav-container {
   height: 100%;
 }
@@ -20,11 +22,17 @@ mat-sidenav {
 }
 
 mat-sidenav-content {
+  display: flex;
+  flex-direction: column;
   background-color: colors.$light-green-bg;
 }
 
 #container {
-  padding: 0 15px 50px 15px;
+  padding: 0 $content-padding 50px $content-padding;
+}
+
+#close-sidenav {
+  align-self: flex-end;
 }
 
 nav {
@@ -38,5 +46,17 @@ nav {
   }
   button.active {
     color: white
+  }
+}
+
+#contant-quick-nav {
+  background-color: colors.$dark-green;
+  margin-left: -$content-padding;
+  display: flex;
+  width: 200px;
+  flex-direction: row;
+  border-bottom-right-radius: 10px;
+  button {
+    margin: 0 5px;
   }
 }

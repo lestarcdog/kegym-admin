@@ -1,5 +1,6 @@
 <mat-sidenav-container #sidenav>
-  <mat-sidenav [opened]="!!currentUserName" mode="side">
+  <mat-sidenav [opened]="sideNavOpen" mode="side">
+    <button id="close-sidenav" mat-icon-button (click)="sideNavOpen = false">Bezár <mat-icon>menu</mat-icon></button>
     <div id="current-user">
       <div>
         Szia <strong>{{currentUserName}}</strong>
@@ -16,6 +17,14 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <div id="container">
+      <div id="contant-quick-nav">
+        <button *ngIf="showBackToList" mat-icon-button [routerLink]="['/dog-list']">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button *ngIf="!sideNavOpen" mat-icon-button (click)="sideNavOpen = true">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>
