@@ -70,8 +70,11 @@ export class ChartComponent implements OnInit {
             zIndex: -1,
             color: COLOR_BANDS[i % COLOR_BANDS.length],
             label: {
-              text: `Étel: ${curr.foodName}`,
-              align: 'center'
+              text: curr.foodName,
+              align: 'center',
+              style: {
+                fontSize: '10px',
+              }
             }
           })
         }
@@ -106,7 +109,8 @@ export class ChartComponent implements OnInit {
         type: 'datetime',
         dateTimeLabelFormats: {
           day: '%Y %b %e',
-          week: '%Y %b %e'
+          week: '%Y %b %e',
+          month: '%Y %b',
         },
       },
       yAxis: [
