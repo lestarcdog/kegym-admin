@@ -5,10 +5,15 @@
 form {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
 
   mat-radio-group, mat-form-field {
     margin: 0 15px;
+
+    @media screen and (max-width: 500px) {
+      margin: 5px 0;
+    }
 
     mat-radio-button {
       margin: 0 5px;
