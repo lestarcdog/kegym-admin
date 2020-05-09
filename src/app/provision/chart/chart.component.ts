@@ -97,7 +97,10 @@ export class ChartComponent implements OnInit {
       chart: {
         type: 'line',
         backgroundColor: '#dfffdf',
-        zoomType: 'x'
+        zoomType: 'x',
+        scrollablePlotArea: {
+          minWidth: 500
+        }
       },
       title: {
         text: 'Etetési napló'
@@ -111,7 +114,7 @@ export class ChartComponent implements OnInit {
           day: '%Y %b %e',
           week: '%Y %b %e',
           month: '%Y %b',
-        },
+        }
       },
       yAxis: [
         {
