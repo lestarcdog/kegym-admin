@@ -6,10 +6,13 @@
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
+    "strictPropertyInitialization": false,
+    "noImplicitAny": false,
     "target": "es2017"
   },
   "compileOnSave": true,
   "include": [
-    "src"
+    "src",
+    "../src/domain"
   ]
 }

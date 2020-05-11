@@ -56,7 +56,7 @@ export class Dog {
   breed: string
   dogSex: DogSex
   assistanceTypes: AssistanceDogType[]
-  trainingMileStones: {
+  trainingMileStones?: {
     // Key of the AssistanceDogType
     [key: string]: TrainingMilestone
   }

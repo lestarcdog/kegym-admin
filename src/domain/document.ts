@@ -6,8 +6,10 @@ export enum DocumentType {
   CONTRACT = 'Szerződés',
   SINGUP = 'Jelentkezési lap',
   EXAM = 'Vizsgajegyzőkönyv',
-  TRACKING_SHEET = 'Utánkövetési lapok',
-  CERTIFICATES = 'Igazolványok',
+  TRACKING_SHEET = 'Utánkövetési lap',
+  MATESZE_THERAPY_CERTIFICATES = 'MATESZE Terápiás Igazolvány',
+  MATESZE_SERVICE_CERTIFICATES = 'MATESZE Segítő Igazolvány',
+  ADI_THERAPY_CERTIFICATES = 'ADI Terápiás Igazolvány',
   RENEWAL_PROCESS = 'Meghosszabítás'
 }
 
@@ -20,4 +22,11 @@ export class DocumentEntry {
   documentDate: Date
   createdAt: Date
   createdBy: string
+}
+
+export class ExpiringDocument {
+  prevDocument: DocumentEntry | null
+  missingDocumentType: DocumentType
+  expiryDate: Date | null
+  dogId: string
 }
