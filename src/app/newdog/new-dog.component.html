@@ -43,14 +43,34 @@
                 {{at.value}}
               </mat-option>
             </mat-select>
-            <mat-error *ngIf="dogGroup.get('assistanceTypes').invalid">Legalább egy valamit dolgozzon az a kutya</mat-error>
+            <mat-error *ngIf="dogGroup.get('assistanceTypes').invalid">Legalább egy valamit dolgozzon az a kutya
+            </mat-error>
           </mat-form-field>
 
-          <ul id="assistanceTypeList">
+          <ul id="assistance-type-list">
             <li *ngFor="let type of dogGroup.get('assistanceTypes').value">{{getAssistanceTypeName(type)}}
-              <a mat-button (click)="removeAssistanceTypeFromList(type)"><mat-icon>delete</mat-icon></a>
+              <a mat-button (click)="removeAssistanceTypeFromList(type)">
+                <mat-icon>delete</mat-icon>
+              </a>
             </li>
           </ul>
+
+          <div id="organization-list">
+            <span>Szervezet: </span>
+            <mat-checkbox (change)="organizationCheckBox('MATESZE', $event)"
+              [checked]="dogGroup.get('organizations').value.includes('MATESZE')">
+              MATESZE
+            </mat-checkbox>
+            <mat-checkbox (change)="organizationCheckBox('ADI', $event)"
+              [checked]="dogGroup.get('organizations').value.includes('ADI')">
+              ADI
+            </mat-checkbox>
+            <div *ngIf="dogGroup.get('organizations').invalid">
+              <mat-error>
+                Legalább az egyik szervezetet be kell jelölni.
+              </mat-error>
+            </div>
+          </div>
 
           <mat-form-field appearance="fill">
             <mat-label>Chip szám</mat-label>
@@ -92,7 +112,8 @@
       <div id="action-bar">
         <mat-error *ngIf="saveError">{{saveError}}</mat-error>
 
-        <button [disabled]="isSaving || dogGroup.invalid" mat-raised-button color="primary" type="submit">Mentés</button>
+        <button [disabled]="isSaving || dogGroup.invalid" mat-raised-button color="primary"
+          type="submit">Mentés</button>
         <button *ngIf="originalDog" [disabled]="isSaving || dogGroup.pristine" mat-raised-button color="warn"
           type="button" (click)="confirmResetDog()">Visszaállít</button>
       </div>

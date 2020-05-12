@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
 import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore'
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms'
+import { MatCheckboxChange } from '@angular/material/checkbox'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { ActivatedRoute, Router } from '@angular/router'
 import * as moment from 'moment'
 import { filter, map, switchMap } from 'rxjs/operators'
-import { AssistanceDogType, asssistanceDogType, Dog, DogSex, dogSexArray, Trainer } from 'src/domain/dog'
+import { AssistanceDogType, asssistanceDogType, Dog, DogSex, dogSexArray, Organization, Trainer } from 'src/domain/dog'
 import { mapFirebaseDog } from '../service/mapper/dogMapper'
 
 interface DogForm {
@@ -15,6 +16,7 @@ interface DogForm {
   breed: string
   dogSex: string
   assistanceTypes: AssistanceDogType[]
+  organizations: Organization[]
   chipNumber: string
   trainer: Trainer
   owner: {
@@ -39,6 +41,7 @@ export class NewDogComponent implements OnInit {
     breed: new FormControl(null, Validators.required),
     dogSex: new FormControl(null, Validators.required),
     assistanceTypes: new FormControl([], [Validators.required, notEmptyList]),
+    organizations: new FormControl([], [Validators.required, notEmptyList]),
     chipNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{15}$/)]),
     trainer: new FormControl(null, Validators.required),
     owner: new FormGroup({
@@ -109,6 +112,18 @@ export class NewDogComponent implements OnInit {
     return AssistanceDogType[id]
   }
 
+  organizationCheckBox(orgStr: string, change: MatCheckboxChange) {
+    const org = Organization[orgStr]
+    if (org) {
+      const c = this.dogGroup.get('organizations')
+      console.log('old', c.value)
+      c.setValue(change.checked ? [org, ...c.value] : c.value.filter((x: Organization) => x !== org))
+      console.log('new', c.value)
+    } else {
+      console.error('No organization as for checkbox', orgStr)
+    }
+  }
+
   resetDog() {
     if (this.originalDog) {
       this.title = `Módosítás: ${this.originalDog.name}`
@@ -118,6 +133,7 @@ export class NewDogComponent implements OnInit {
         breed: this.originalDog.breed || '',
         dogSex: this.originalDog.dogSex || '',
         assistanceTypes: this.originalDog.assistanceTypes || [],
+        organizations: this.originalDog.organization || [],
         chipNumber: this.originalDog.chipNumber || '',
         trainer: this.originalDog.trainer,
         owner: {
@@ -158,6 +174,7 @@ export class NewDogComponent implements OnInit {
       breed: value.breed,
       dogSex: value.dogSex,
       assistanceTypes: value.assistanceTypes,
+      organization: value.organizations,
       chipNumber: value.chipNumber,
       owner: value.owner,
       trainer: value.trainer,

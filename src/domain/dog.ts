@@ -39,6 +39,11 @@ export enum TrainingPlace {
   TRAINER = 'Kiképzőnél'
 }
 
+export enum Organization {
+  MATESZE = 'MATESZE',
+  ADI = 'ADI'
+}
+
 export const trianingPlaceArray = Object.keys(TrainingPlace).map((key) => ({ key, value: TrainingPlace[key] }))
 
 export class TrainingMilestone {
@@ -56,6 +61,7 @@ export class Dog {
   breed: string
   dogSex: DogSex
   assistanceTypes: AssistanceDogType[]
+  organization: Organization[]
   trainingMileStones?: {
     // Key of the AssistanceDogType
     [key: string]: TrainingMilestone

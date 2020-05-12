@@ -9,8 +9,7 @@ export enum DocumentType {
   TRACKING_SHEET = 'Utánkövetési lap',
   MATESZE_THERAPY_CERTIFICATES = 'MATESZE Terápiás Igazolvány',
   MATESZE_SERVICE_CERTIFICATES = 'MATESZE Segítő Igazolvány',
-  ADI_THERAPY_CERTIFICATES = 'ADI Terápiás Igazolvány',
-  RENEWAL_PROCESS = 'Meghosszabítás'
+  ADI_THERAPY_CERTIFICATES = 'ADI Terápiás Igazolvány'
 }
 
 export const documentTypesArray = Object.keys(DocumentType).map((key) => ({ key, value: DocumentType[key] }))

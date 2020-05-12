@@ -47,7 +47,7 @@ form {
     }
   }
 
-  #assistanceTypeList {
+  #assistance-type-list {
     margin: 0;
 
     li,
@@ -58,6 +58,17 @@ form {
     .mat-button {
       padding: 0;
       min-width: 0;
+    }
+  }
+
+  #organization-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 10px 0;
+
+    mat-checkbox {
+      margin: 0 10px;
     }
   }
 }
