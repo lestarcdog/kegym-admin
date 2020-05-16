@@ -6,7 +6,7 @@ import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage
 import { FormControl } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { ActivatedRoute } from '@angular/router'
-import * as moment from 'moment'
+import moment from 'moment'
 import { Observable, of, Subscription, throwError } from 'rxjs'
 import { flatMap } from 'rxjs/operators'
 import { DocumentEntry, DocumentType, documentTypesArray } from 'src/domain/document'

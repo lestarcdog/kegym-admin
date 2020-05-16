@@ -5,7 +5,7 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn,
 import { MatCheckboxChange } from '@angular/material/checkbox'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { ActivatedRoute, Router } from '@angular/router'
-import * as moment from 'moment'
+import moment from 'moment'
 import { filter, map, switchMap } from 'rxjs/operators'
 import { AssistanceDogType, asssistanceDogType, Dog, DogSex, dogSexArray, Organization, Trainer } from 'src/domain/dog'
 import { mapFirebaseDog } from '../service/mapper/dogMapper'

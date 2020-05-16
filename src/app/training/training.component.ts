@@ -4,7 +4,7 @@ import { AngularFirestore, DocumentSnapshot, QuerySnapshot } from '@angular/fire
 import { FormControl } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { ActivatedRoute } from '@angular/router'
-import * as moment from 'moment'
+import moment from 'moment'
 import { Subscription } from 'rxjs'
 import { map, switchMap } from 'rxjs/operators'
 import { AssistanceDogType, Dog, TrainingMilestone } from 'src/domain/dog'

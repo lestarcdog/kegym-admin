@@ -1,4 +1,5 @@
 import moment from 'moment'
+import { firebaseToMomentDate } from '../../src/app/service/time-util'
 import { DocumentEntry, DocumentType, ExpiringDocument } from '../../src/domain/document'
 import { Dog, Organization } from '../../src/domain/dog'
 import { expDocsRef, getActiveExpiringDocuments, getAllDogs, getAllExpiringDocsCandidates } from './expiring-documents-service'
@@ -31,10 +32,11 @@ function doesDogNeedDocument(dog: Dog, docType: DocumentType): boolean {
   // By default every dog is a matesze dog
 
   if (dog.trainingMileStones) {
-    const now = moment()
+    const now = new Date()
     const hasAnyExam = Object.values(dog.trainingMileStones)
       .filter(f => f.examDate)
-      .filter(f => moment(f.examDate).isBefore(now)).length
+      .filter(f => firebaseToMomentDate(f.examDate)?.isBefore(now))
+      .length
     return hasAnyExam > 0
   } else {
     return false
@@ -71,7 +73,7 @@ async function getAllExpiringDocuments(): Promise<ExpiringDocument[]> {
         }
 
         const expiryAfterDays = expiringDocumenTypes.find(e => e.type === prevDocument?.type)?.expiresAfterDay
-        console.log('dogname', dog.name, 'expiry after date', expiryAfterDays, 'prev document', prevDocument)
+        console.log('Dog', dog.name, 'expiry after date', expiryAfterDays, 'prev document', prevDocument)
         if (prevDocument && expiryAfterDays) {
           const warningDate = moment().subtract(expiryAfterDays - daysBeforeExpiry, 'days')
           const docDate = moment((prevDocument.documentDate as any).toDate())

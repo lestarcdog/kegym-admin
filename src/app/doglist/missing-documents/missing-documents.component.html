@@ -1,0 +1,30 @@
+<mat-accordion *ngIf="expiringDocuments.length">
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Hiányzó dokumentumok
+      </mat-panel-title>
+      <mat-panel-description>
+        {{expiringDocuments.length}} kutyának hiányosak a dokumentumai
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <div *ngFor="let doc of expiringDocuments" class="expiring-doc-div">
+      <h4>
+        {{getDogName(doc.dogId)}}
+        <span class="header-description">- {{getDogHandlerDetails(doc.dogId)}}</span>
+        <button mat-icon-button [routerLink]="['/dog', 'documents', {dogId: doc.dogId, dogName: getDogName(doc.dogId)}]"
+          matTooltip="Ugrás a dokumentumokhoz/iratokhoz">
+          <mat-icon>folder</mat-icon>
+        </button>
+      </h4>
+      <ul>
+        <li *ngFor="let e of doc.docs">
+          <strong>{{getDocName(e.missingDocumentType)}}</strong> -
+          <ng-container *ngIf="e.expiryDate">Lejárat {{ e.expiryDate | date:'mediumDate'}}</ng-container>
+          <ng-container *ngIf="!e.expiryDate">Nincs dokumentum feltöltve</ng-container>
+        </li>
+      </ul>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

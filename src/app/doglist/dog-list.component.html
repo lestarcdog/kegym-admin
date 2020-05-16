@@ -1,5 +1,7 @@
 <h1>Összes kutya</h1>
 
+<app-missing-documents *ngIf="dogList" [dogs]="dogList.data"></app-missing-documents>
+
 <mat-form-field id="search-field">
   <mat-label>Keresés</mat-label>
   <input matInput [formControl]="filterKeyControl" placeholder="Kutya név, Tulajdonos név vagy telefonszám">

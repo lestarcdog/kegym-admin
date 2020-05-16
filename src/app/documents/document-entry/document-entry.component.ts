@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
-import * as moment from 'moment'
+import moment from 'moment'
 import { Observable } from 'rxjs'
 import { documentTypesArray } from 'src/domain/document'
 import { DeleteEvent, DocumentEntryItem, UploadEvent } from '../documents.component'

@@ -13,6 +13,7 @@ import { DocumentEntryComponent } from './documents/document-entry/document-entr
 import { DocumentSelectComponent } from './documents/document-select/document-select.component'
 import { DocumentsComponent } from './documents/documents.component'
 import { DogListComponent } from './doglist/dog-list.component'
+import { MissingDocumentsComponent } from './doglist/missing-documents/missing-documents.component'
 import { LoginComponent } from './login/login.component'
 import { NavComponent } from './nav/nav.component'
 import { NewDogComponent } from './newdog/new-dog.component'
@@ -47,7 +48,8 @@ const dateFormat: MatDateFormats = {
     DocumentEntryComponent,
     DocumentSelectComponent,
     TrainerSelectComponent,
-    TrainersSettingsComponent
+    TrainersSettingsComponent,
+    MissingDocumentsComponent
   ],
   imports: [
     BrowserModule,

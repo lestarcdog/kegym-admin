@@ -15,6 +15,7 @@
   "compileOnSave": true,
   "include": [
     "src",
-    "../src/domain"
+    "../src/domain",
+    "../src/app/service/time-util.ts"
   ]
 }

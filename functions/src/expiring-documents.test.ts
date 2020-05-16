@@ -100,7 +100,7 @@ describe('expiring documents', () => {
   })
 
   it('should not include dogs which has exam date set in the future', async () => {
-    mockAllDogs = Promise.resolve([wrapSnapshot(createNewDog('bömbi', minusDays(-100)))])
+    mockAllDogs = Promise.resolve([wrapSnapshot(createNewDog('bömbi', moment(TEST_DATE).add(100, 'days').toDate()))])
     const result = await getAllNewExpiringDocs()
     expect(result).toHaveLength(0)
   })

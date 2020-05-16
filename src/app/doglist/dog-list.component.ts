@@ -1,17 +1,17 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { QuerySnapshot } from '@angular/fire/firestore/interfaces';
-import { FormControl } from '@angular/forms';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { AssistanceDogType, Dog } from 'src/domain/dog';
-import { mapFirebaseDog } from '../service/mapper/dogMapper';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import { AngularFirestore } from '@angular/fire/firestore'
+import { QuerySnapshot } from '@angular/fire/firestore/interfaces'
+import { FormControl } from '@angular/forms'
+import { MatSort } from '@angular/material/sort'
+import { MatTableDataSource } from '@angular/material/table'
+import { ActivatedRoute, Router } from '@angular/router'
+import { Subscription } from 'rxjs'
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators'
+import { AssistanceDogType, Dog } from 'src/domain/dog'
+import { mapFirebaseDog } from '../service/mapper/dogMapper'
 
 
-class ListDog extends Dog {
+export class ListDog extends Dog {
   docId: string
 }
 

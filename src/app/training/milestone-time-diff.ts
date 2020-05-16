@@ -1,4 +1,4 @@
-import * as moment from 'moment'
+import moment from 'moment'
 
 export function milestoneTimeDifference(date: moment.Moment) {
   if (date) {

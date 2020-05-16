@@ -123,6 +123,7 @@
     <p *ngIf="originalDog">
       Utoljára módosítva: {{originalDog.createdAt | date:'medium'}} <br />
       Utoljára módosította: {{originalDog.createdBy}}
+      Kutya adatbázis azonosító: {{originalDogId}}
     </p>
     <button [disabled]="isSaving" mat-button color="warn" (click)="removeDog()">Törlés</button>
 

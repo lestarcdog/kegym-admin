@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import * as moment from 'moment';
-import { TrainingType, trainingTypesArray } from 'src/domain/training';
-import { TrainingEntryItem } from '../training.component';
+import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
+import moment from 'moment'
+import { TrainingType, trainingTypesArray } from 'src/domain/training'
+import { TrainingEntryItem } from '../training.component'
 
 interface EntryForm {
   date: moment.Moment

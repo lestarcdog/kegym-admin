@@ -1,12 +1,12 @@
-import { Component, Input } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import * as moment from 'moment';
-import { firebaseToMomentDate } from 'src/app/service/time-util';
-import { AssistanceDogType, Dog, TrainingMilestone, trianingPlaceArray } from 'src/domain/dog';
-import { milestoneTimeDifference } from '../milestone-time-diff';
+import { Component, Input } from '@angular/core'
+import { AngularFireAuth } from '@angular/fire/auth'
+import { AngularFirestore } from '@angular/fire/firestore'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { MatSnackBar } from '@angular/material/snack-bar'
+import moment from 'moment'
+import { firebaseToMomentDate } from 'src/app/service/time-util'
+import { AssistanceDogType, Dog, TrainingMilestone, trianingPlaceArray } from 'src/domain/dog'
+import { milestoneTimeDifference } from '../milestone-time-diff'
 
 @Component({
   selector: 'app-training-milestones',

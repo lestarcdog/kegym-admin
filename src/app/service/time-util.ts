@@ -1,6 +1,6 @@
-import * as moment from 'moment'
+import moment from 'moment'
 
-export function firebaseToMomentDate(fb: any) {
+export function firebaseToMomentDate(fb: any): moment.Moment | undefined {
   if (!fb) {
     return undefined
   }
@@ -12,7 +12,7 @@ export function firebaseToMomentDate(fb: any) {
   }
 }
 
-export function firebaseToDate(fb: any) {
+export function firebaseToDate(fb: any): Date | undefined {
   if (!fb) {
     return undefined
   }
