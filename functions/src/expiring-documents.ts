@@ -1,7 +1,7 @@
-import * as admin from 'firebase-admin'
-import * as moment from 'moment'
+import moment from 'moment'
 import { DocumentEntry, DocumentType, ExpiringDocument } from '../../src/domain/document'
-import { Dog } from '../../src/domain/dog'
+import { Dog, Organization } from '../../src/domain/dog'
+import { expDocsRef, getActiveExpiringDocuments, getAllDogs, getAllExpiringDocsCandidates } from './expiring-documents-service'
 
 const expiringDocumenTypes: { type: string, expiresAfterDay: number }[] = [
   { type: 'HEALTH_CERTIFICATE', expiresAfterDay: 365 },
@@ -9,15 +9,10 @@ const expiringDocumenTypes: { type: string, expiresAfterDay: number }[] = [
   { type: 'MATESZE_THERAPY_CERTIFICATES', expiresAfterDay: 365 * 2 },
 ]
 
-const expDocsRef = () => admin.firestore().collection('expiring-documents')
-
-/**
- * Manually sorted in decreasing order.
- */
 const daysBeforeExpiry = 30
 
 async function activeExpiringDocuments(): Promise<ExpiringDocument[]> {
-  const expDocs = (await expDocsRef().get()).docs
+  const expDocs = await getActiveExpiringDocuments()
   console.log('Already annotated expiring documents', expDocs)
   return expDocs.map(d => d.data() as ExpiringDocument)
 }
@@ -28,8 +23,18 @@ async function activeExpiringDocuments(): Promise<ExpiringDocument[]> {
  * @param docType document type to check
  */
 function doesDogNeedDocument(dog: Dog, docType: DocumentType): boolean {
+  // ADI documents not required for non-ADI dogs
+  if (docType.includes('ADI') && !dog.organization?.includes(Organization.ADI)) {
+    return false
+  }
+
+  // By default every dog is a matesze dog
+
   if (dog.trainingMileStones) {
-    const hasAnyExam = Object.values(dog.trainingMileStones).filter(f => f.examDate).length
+    const now = moment()
+    const hasAnyExam = Object.values(dog.trainingMileStones)
+      .filter(f => f.examDate)
+      .filter(f => moment(f.examDate).isBefore(now)).length
     return hasAnyExam > 0
   } else {
     return false
@@ -37,25 +42,17 @@ function doesDogNeedDocument(dog: Dog, docType: DocumentType): boolean {
 }
 
 async function getAllExpiringDocuments(): Promise<ExpiringDocument[]> {
-  const maxDaysToLookBack = Math.max(...expiringDocumenTypes.map(t => t.expiresAfterDay))
-  const searchFromDate = moment().subtract(maxDaysToLookBack - daysBeforeExpiry, 'days')
-  console.log('Searching after date warning date', searchFromDate)
-
-  const allDogs = await admin.firestore().collection('dogs').get()
+  const allDogs = await getAllDogs()
   const missingDocs: ExpiringDocument[] = []
 
-  for (const dogDoc of allDogs.docs) {
+  for (const dogDoc of allDogs) {
     const dog = dogDoc.data() as Dog
-    const recentStorageDocs = await admin.firestore()
-      .collection('dogs').doc(dogDoc.id)
-      .collection('documents').where('documentDate', '>=', searchFromDate)
-      .orderBy('documentDate', 'desc')
-      .get()
+    const recentStorageDocs = await getAllExpiringDocsCandidates(dogDoc.id)
 
     // if there is no docs after the warning date it means it is missing and need to be uploaded
     // get only the most recent documents by type. it is sorted in desc order by documentDate
     const availableDocs: DocumentEntry[] = []
-    recentStorageDocs.docs.map(d => d.data() as DocumentEntry).forEach(d => {
+    recentStorageDocs.map(d => d.data() as DocumentEntry).forEach(d => {
       const isIncluded = availableDocs.find(ad => ad.type === d.type)
       if (!isIncluded) {
         availableDocs.push(d)
@@ -76,10 +73,10 @@ async function getAllExpiringDocuments(): Promise<ExpiringDocument[]> {
         const expiryAfterDays = expiringDocumenTypes.find(e => e.type === prevDocument?.type)?.expiresAfterDay
         console.log('dogname', dog.name, 'expiry after date', expiryAfterDays, 'prev document', prevDocument)
         if (prevDocument && expiryAfterDays) {
-          const warningDate = moment().subtract(expiryAfterDays, 'days')
+          const warningDate = moment().subtract(expiryAfterDays - daysBeforeExpiry, 'days')
           const docDate = moment((prevDocument.documentDate as any).toDate())
           console.log('warning date', warningDate, 'doc date', docDate)
-          if (docDate.isSame(warningDate, 'days')) {
+          if (docDate.isSameOrBefore(warningDate, 'days')) {
             isMissing = true
             expiryDate = docDate.add(expiryAfterDays, 'day').toDate()
           }
@@ -116,14 +113,25 @@ async function saveNewExpiringDocs(docs: ExpiringDocument[]) {
   }
 }
 
-
-export const checkExpiringDocuments = async () => {
+/**
+ * Visible for testing
+ */
+export const getAllNewExpiringDocs = async () => {
   const activeExpDocs = await activeExpiringDocuments()
   const allExpDocs = await getAllExpiringDocuments()
   // new expiring docs which are not in the active list
-  const newExpiringDocs = allExpDocs.filter(expDoc => !activeExpDocs.find(ac => ac.dogId === expDoc.dogId))
+  return allExpDocs.filter(expDoc =>
+    !activeExpDocs.find(ac =>
+      ac.dogId === expDoc.dogId && ac.missingDocumentType === expDoc.missingDocumentType
+    )
+  )
+}
+
+
+export const checkExpiringDocuments = async () => {
+  const newExpiringDocs = await getAllNewExpiringDocs()
   if (newExpiringDocs.length) {
-    // await saveNewExpiringDocs(newExpiringDocs)
+    await saveNewExpiringDocs(newExpiringDocs)
     return null
   } else {
     console.log('No new expiring documents')

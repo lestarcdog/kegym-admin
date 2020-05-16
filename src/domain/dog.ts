@@ -20,9 +20,9 @@ export const asssistanceDogType = Object.keys(AssistanceDogType).map(key => ({ k
 
 export class Owner {
   name: string
-  address: string
-  phone: string
-  email: string
+  address?: string
+  phone?: string
+  email?: string
 }
 
 export class Trainer {

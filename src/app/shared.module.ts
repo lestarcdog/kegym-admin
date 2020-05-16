@@ -9,6 +9,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter'
 import { MatAutocompleteModule } from '@angular/material/autocomplete'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
+import { MatCheckboxModule } from '@angular/material/checkbox'
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatDividerModule } from '@angular/material/divider'
 import { MatExpansionModule } from '@angular/material/expansion'
@@ -27,8 +28,6 @@ import { MatTableModule } from '@angular/material/table'
 import { MatTabsModule } from '@angular/material/tabs'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { TooltipModule } from 'ng2-tooltip-directive'
-
-
 
 
 const modules = [
@@ -61,6 +60,7 @@ const modules = [
   MatRadioModule,
   MatExpansionModule,
   MatTabsModule,
+  MatCheckboxModule,
   // 3rd party modules
   TooltipModule
 ]
