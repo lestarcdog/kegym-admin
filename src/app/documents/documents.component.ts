@@ -168,6 +168,10 @@ export class DocumentsComponent implements OnInit, OnDestroy {
         })
         this.newDocuments = this.newDocuments.filter(d => d.newDocId !== event.newDocId)
         this.refreshDocuments()
+
+        // always delete the missing documentation on new upload
+        const missingDocId = `${this.dogId}_${event.type}`
+        await this.store.collection('expiring-documents').doc(missingDocId).delete()
       } catch (e) {
         if (e.code === 'storage/canceled') {
           console.log('User cancelled upload')
@@ -222,7 +226,4 @@ export class DocumentsComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-
-
 }
