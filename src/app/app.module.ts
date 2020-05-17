@@ -20,6 +20,7 @@ import { NewDogComponent } from './newdog/new-dog.component'
 import { ProvisionModule } from './provision/provision.module'
 import { AppRoutingModule } from './routing.module'
 import { TrainersSettingsComponent } from './settings/trainers/trainers-settings.component'
+import { TrainingTypeComponent } from './settings/training-type/training-type.component'
 import { SharedModule } from './shared.module'
 import { TrainingModule } from './training/training.module'
 
@@ -49,7 +50,8 @@ const dateFormat: MatDateFormats = {
     DocumentSelectComponent,
     TrainerSelectComponent,
     TrainersSettingsComponent,
-    MissingDocumentsComponent
+    MissingDocumentsComponent,
+    TrainingTypeComponent
   ],
   imports: [
     BrowserModule,

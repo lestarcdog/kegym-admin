@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import moment from 'moment'
-import { TrainingType, trainingTypesArray } from 'src/domain/training'
+import { TrainingType } from 'src/domain/training'
 import { TrainingEntryItem } from '../training.component'
 
 interface EntryForm {
@@ -52,7 +52,8 @@ export class TrainingEntryComponent {
   @Output()
   delete = new EventEmitter<string>()
 
-  trainingTypes = trainingTypesArray
+  @Input()
+  trainingTypes: TrainingType[] = []
 
   constructor() { }
 
@@ -69,10 +70,14 @@ export class TrainingEntryComponent {
     }
   }
 
+  compareWithType(a: TrainingType, b: TrainingType): boolean {
+    return a.hu === b.hu
+  }
+
   deleteEntry() {
     if (this.entry.docId) {
       const date = this.entry.date.toLocaleDateString()
-      const type = TrainingType[this.entry.type]
+      const type = this.entry.type.hu
       if (confirm(`Biztos benne hogy törli a ${date} - ${type} edzést`)) {
         this.delete.emit(this.entry.docId)
       }

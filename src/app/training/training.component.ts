@@ -8,7 +8,7 @@ import moment from 'moment'
 import { Subscription } from 'rxjs'
 import { map, switchMap } from 'rxjs/operators'
 import { AssistanceDogType, Dog, TrainingMilestone } from 'src/domain/dog'
-import { TrainingEntry, trainingTypesArray } from 'src/domain/training'
+import { TrainingEntry, TrainingType } from 'src/domain/training'
 import { firebaseToMomentDate } from '../service/time-util'
 import { milestoneTimeDifference } from './milestone-time-diff'
 
@@ -40,7 +40,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
   private sub = new Subscription()
 
   trainingTypeFilter = new FormControl('')
-  trainingTypes = trainingTypesArray
+  trainingTypes: TrainingType[] = []
 
   ngOnInit(): void {
     this.route.paramMap.pipe(
@@ -54,9 +54,17 @@ export class TrainingComponent implements OnInit, OnDestroy {
       this.refreshEntries()
     }, err => console.error(err))
 
+    this.readTrainingTypes()
+
     const filterSub = this.trainingTypeFilter.valueChanges.subscribe(key => this.filterEntries(key))
     this.sub.add(filterSub)
 
+  }
+
+  private readTrainingTypes() {
+    this.store.collection('training-types').get().subscribe((snap: QuerySnapshot<TrainingType>) =>
+      this.trainingTypes = snap.docs.map(d => d.data())
+    )
   }
 
   ngOnDestroy(): void {
@@ -65,7 +73,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   private filterEntries(key: string) {
     if (key) {
-      this.filteredEntries = this.entries.filter(e => e.type === key)
+      this.filteredEntries = this.entries.filter(e => e.type.hu === key)
     } else {
       this.filteredEntries = this.entries
     }

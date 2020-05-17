@@ -1,5 +1,6 @@
 <mat-card id="container">
-  <mat-card-subtitle *ngIf="entry.docId">Utolsó módosítás {{entry.createdAt | date:'medium'}} - {{entry.createdBy}}</mat-card-subtitle>
+  <mat-card-subtitle *ngIf="entry.docId">Utolsó módosítás {{entry.createdAt | date:'medium'}} - {{entry.createdBy}}
+  </mat-card-subtitle>
   <form (ngSubmit)="submit()" [formGroup]="entryGroup">
 
     <mat-form-field appearance="fill">
@@ -13,9 +14,9 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Gyakorlat</mat-label>
-      <mat-select formControlName="type">
-        <mat-option *ngFor="let t of trainingTypes" [value]="t.key">
-          {{t.value}}
+      <mat-select formControlName="type" [compareWith]="compareWithType">
+        <mat-option *ngFor="let t of trainingTypes" [value]="t">
+          {{t.hu}} / {{ t.en}}
         </mat-option>
       </mat-select>
       <mat-error>Kötelező mező</mat-error>

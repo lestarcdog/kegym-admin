@@ -1,0 +1,26 @@
+<h1>Gyakorlatok</h1>
+
+<form id="new-training-type" [formGroup]="newType" (ngSubmit)="save()">
+  <mat-form-field appearance="fill">
+    <mat-label>Magyar elnevezés</mat-label>
+    <input matInput formControlName="hu" placeholder="Ül">
+    <mat-error>Kötelező mező</mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Angol elnevezés</mat-label>
+    <input matInput formControlName="en" placeholder="Sit">
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit">Mentés</button>
+</form>
+
+<div *ngFor="let entry of trainingTypes" class="types">
+  <p>
+    <strong>Magyar: </strong>{{entry.hu}}
+    <strong>Angol: </strong>{{entry.en ? entry.en : '-'}}
+  </p>
+  <p>
+    Létrehozta: {{entry.createdBy}} - {{entry.createdAt | date:'medium'}}
+  </p>
+
+</div>

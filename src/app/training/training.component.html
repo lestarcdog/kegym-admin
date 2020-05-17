@@ -22,8 +22,8 @@
       <mat-label>Gyakorlat</mat-label>
       <mat-select [formControl]="trainingTypeFilter">
         <mat-option [value]=""><strong>Összes mutatása</strong></mat-option>
-        <mat-option *ngFor="let t of trainingTypes" [value]="t.key">
-          {{t.value}}
+        <mat-option *ngFor="let t of trainingTypes" [value]="t.hu">
+          {{t.hu}} / {{t.en}}
         </mat-option>
       </mat-select>
       <mat-error>Kötelező mező</mat-error>
@@ -32,12 +32,13 @@
 
   <div *ngIf="newEntry" id="new-entry-item">
     <app-training-entry [entry]="newEntry" (save)="saveEntry($event)" (delete)="deleteEntry($event)"
-      [isSaving]="loading">
+      [isSaving]="loading" [trainingTypes]="trainingTypes">
     </app-training-entry>
   </div>
 
   <div class="entry-item" *ngFor="let entry of filteredEntries">
-    <app-training-entry [entry]="entry" (save)="saveEntry($event)" (delete)="deleteEntry($event)" [isSaving]="loading">
+    <app-training-entry [entry]="entry" (save)="saveEntry($event)" (delete)="deleteEntry($event)" [isSaving]="loading"
+      [trainingTypes]="trainingTypes">
     </app-training-entry>
   </div>
 
