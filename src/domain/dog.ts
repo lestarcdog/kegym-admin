@@ -11,7 +11,6 @@ export enum AssistanceDogType {
   PSYCHIATRIC = 'Személyisegítő / Psychiatric',
   MOBILITY = 'Mozgássegítő / Mobility',
   HEARING = 'Halló / Hearing',
-  THERAPY = 'Terápiás / Therapy',
   ALARM = 'Jelző / Alarm'
 }
 

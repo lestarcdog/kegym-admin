@@ -11,3 +11,8 @@ Go to the functions directory.
 set GOOGLE_APPLICATION_CREDENTIALS=kegym_auth_key.json
 npm run shell
 ```
+
+Upload new function
+```
+firebase deploy --only functions
+```

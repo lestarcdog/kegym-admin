@@ -12,7 +12,6 @@ export enum TrainingType {
   SPECIAL_TRICK_3 = 'Trükk 3 / Trick 3',
 }
 
-
 export const trainingTypesArray = Object.keys(TrainingType).map((key) => ({ key, value: TrainingType[key] }))
 
 export interface TrainingEntry {
