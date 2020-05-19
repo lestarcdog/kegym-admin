@@ -15,7 +15,7 @@ export class ListDog extends Dog {
   docId: string
 }
 
-const fullColumns = ['name', 'birthDate', 'assistanceTypes', 'owner', 'phone', 'trainer', 'actions'];
+const fullColumns = ['name', 'birthDate', 'assistanceTypes', 'owner', 'phone', 'trainer', 'actions']
 const shortColumns = ['name', 'owner', 'actions']
 
 @Component({
@@ -30,7 +30,7 @@ export class DogListComponent implements OnInit, OnDestroy {
   private sub = new Subscription()
 
   @ViewChild(MatSort, { static: true })
-  sort: MatSort;
+  sort: MatSort
 
   isMobile
 
@@ -51,6 +51,7 @@ export class DogListComponent implements OnInit, OnDestroy {
       }) as ListDog)
       this.dogList = new MatTableDataSource<ListDog>(fullDogList)
       this.dogList.sort = this.sort
+      this.sort.sort(({ id: 'name', start: 'asc', disableClear: false}))
       this.filterKeyControl.enable()
     })
 
