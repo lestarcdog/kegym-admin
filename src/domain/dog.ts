@@ -6,6 +6,7 @@ export enum DogSex {
   IVARTALAN_SZUKA = 'Ivartalan szuka'
 }
 
+// Change with caution or check expiring-documents
 export enum AssistanceDogType {
   FACILITY = 'Terápiás / Facility',
   PSYCHIATRIC = 'Személyisegítő / Psychiatric',

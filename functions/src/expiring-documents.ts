@@ -4,10 +4,13 @@ import { DocumentEntry, DocumentType, ExpiringDocument } from '../../src/domain/
 import { Dog, Organization } from '../../src/domain/dog'
 import { expDocsRef, getActiveExpiringDocuments, getAllDogs, getAllExpiringDocsCandidates } from './expiring-documents-service'
 
+const MATESZE_THERAPY_CERTIFICATES = 'MATESZE_THERAPY_CERTIFICATES'
+const HEALTH_CERTIFICATE = 'HEALTH_CERTIFICATE'
+
 const expiringDocumenTypes: { type: string, expiresAfterDay: number }[] = [
-  { type: 'HEALTH_CERTIFICATE', expiresAfterDay: 365 },
+  { type: HEALTH_CERTIFICATE, expiresAfterDay: 365 },
   { type: 'ADI_THERAPY_CERTIFICATES', expiresAfterDay: 365 },
-  { type: 'MATESZE_THERAPY_CERTIFICATES', expiresAfterDay: 365 * 2 },
+  { type: MATESZE_THERAPY_CERTIFICATES, expiresAfterDay: 365 * 2 },
 ]
 
 const daysBeforeExpiry = 30
@@ -23,17 +26,29 @@ async function activeExpiringDocuments(): Promise<ExpiringDocument[]> {
  * @param dog assistance dog
  * @param docType document type to check
  */
-function doesDogNeedDocument(dog: Dog, docType: DocumentType): boolean {
+function doesDogNeedDocument(dog: Dog, docType: string): boolean {
   // ADI documents not required for non-ADI dogs
   if (docType.includes('ADI') && !dog.organization?.includes(Organization.ADI)) {
     return false
   }
 
   // By default every dog is a matesze dog
-
   if (dog.trainingMileStones) {
     const now = new Date()
-    const hasAnyExam = Object.values(dog.trainingMileStones)
+    const trainings = Object.keys(dog.trainingMileStones)
+
+    const isDocTypeAndTrainingMatch = trainingKey => {
+      if (trainingKey === 'FACILITY') {
+        return docType === MATESZE_THERAPY_CERTIFICATES || docType === HEALTH_CERTIFICATE
+      } else {
+        return false
+      }
+    }
+
+    const hasAnyExam = trainings
+      .filter(t => isDocTypeAndTrainingMatch(t))
+      // sure we have a training milestone present
+      .map(k => dog.trainingMileStones![k])
       .filter(f => f.examDate)
       .filter(f => firebaseToMomentDate(f.examDate)?.isBefore(now))
       .length

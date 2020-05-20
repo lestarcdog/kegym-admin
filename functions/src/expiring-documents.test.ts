@@ -41,10 +41,10 @@ describe('expiring documents', () => {
       trainer: {
         email: '', name: '', phone: '', trainerId: '', createdAt: new Date(), createdBy: ''
       },
-      assistanceTypes: [AssistanceDogType.THERAPY],
+      assistanceTypes: [AssistanceDogType.FACILITY],
       organization: [Organization.MATESZE],
       trainingMileStones: {
-        'THERAPY': {
+        'FACILITY': {
           examDate,
           createdAt: new Date(),
           createdBy: ''
