@@ -38,8 +38,12 @@ function doesDogNeedDocument(dog: Dog, docType: string): boolean {
     const trainings = Object.keys(dog.trainingMileStones)
 
     const isDocTypeAndTrainingMatch = trainingKey => {
+      if (docType === HEALTH_CERTIFICATE) {
+        return true
+      }
+
       if (trainingKey === 'FACILITY') {
-        return docType === MATESZE_THERAPY_CERTIFICATES || docType === HEALTH_CERTIFICATE
+        return docType === MATESZE_THERAPY_CERTIFICATES
       } else {
         return false
       }

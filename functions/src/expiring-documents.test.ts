@@ -28,7 +28,7 @@ describe('expiring documents', () => {
     mockActiveDocs = Promise.resolve([] as FirebaseDoc[])
   })
 
-  function createNewDog(name: string, examDate?: Date) {
+  function createNewDog(name: string, examDate?: Date, trainingType = 'FACILITY') {
     return {
       name,
       birthDate: new Date(),
@@ -44,7 +44,7 @@ describe('expiring documents', () => {
       assistanceTypes: [AssistanceDogType.FACILITY],
       organization: [Organization.MATESZE],
       trainingMileStones: {
-        'FACILITY': {
+        [trainingType]: {
           examDate,
           createdAt: new Date(),
           createdBy: ''
@@ -125,5 +125,12 @@ describe('expiring documents', () => {
     const result = await getAllNewExpiringDocs()
     expect(result).toHaveLength(1)
     expect(result[0].missingDocumentType).toBe('MATESZE_THERAPY_CERTIFICATES')
+  })
+
+  it('should report psychiatric dogs the yearly health certificate', async () => {
+    mockAllDogs = Promise.resolve([wrapSnapshot(createNewDog('bömbi', minusDays(800), 'PSYCHIATRIC'))])
+    mockAllExpiringDocs = Promise.resolve([
+      wrapSnapshot(createDocumentEntry('HEALTH_CERTIFICATE', minusDays(365 - 30))),
+    ])
   })
 })
