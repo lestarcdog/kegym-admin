@@ -16,70 +16,13 @@ const COLOR_BANDS = ['#D8E2DC', '#FFE5D9', '#FFCAD4', '#F4ACB7']
 })
 export class ChartComponent implements OnInit {
 
+
+  private allFood: FoodEntryItem[] = []
+
   @Input()
   set foods(entries: FoodEntryItem[]) {
-    if (entries && entries.length) {
-      const rev = [...entries].reverse()
-      console.log('Entries', rev)
-      const foodSeries: SeriesOptionsType = {
-        name: FOOD,
-        type: 'line',
-        yAxis: 1,
-        tooltip: {
-          valueSuffix: 'g',
-        },
-        data: rev.map(f => ({
-          x: f.date.getTime(),
-          y: f.foodPortion,
-          name: `Étel: ${f.foodName}`
-        }))
-      }
-
-      const dogWeightSeries: SeriesOptionsType = {
-        name: DOG_WEIGHT,
-        type: 'line',
-        yAxis: 0,
-        tooltip: {
-          valueSuffix: 'kg'
-        },
-        data: rev.map(f => ({
-          x: f.date.getTime(),
-          y: f.dogWeight,
-          name: `Étel: ${f.foodName}`
-        }))
-      }
-
-      this.chart.removeSeries(0)
-      this.chart.removeSeries(0)
-
-      this.chart.addSeries(foodSeries, true, true)
-      this.chart.addSeries(dogWeightSeries, true, true)
-
-      this.chart.ref$.subscribe(ref => {
-        const axis = ref.xAxis[0]
-        rev.forEach(e => axis.removePlotBand(e.foodName))
-
-        for (let i = 0; i < rev.length - 1; i++) {
-          const curr = rev[i]
-          const next = rev[i + 1]
-
-          axis.addPlotBand({
-            from: curr.date.getTime(),
-            to: next.date.getTime(),
-            id: curr.foodName,
-            zIndex: -1,
-            color: COLOR_BANDS[i % COLOR_BANDS.length],
-            label: {
-              text: curr.foodName,
-              align: 'center',
-              style: {
-                fontSize: '10px',
-              }
-            }
-          })
-        }
-      })
-    }
+    this.allFood = [...entries]
+    this.drawChart()
   }
 
   chart: Chart
@@ -122,6 +65,74 @@ export class ChartComponent implements OnInit {
         }
       ]
     });
+
+    this.drawChart()
+  }
+
+  private drawChart() {
+    if (!this.chart || this.allFood?.length === 0) {
+      return
+    }
+
+    const rev = this.allFood.reverse()
+    const foodSeries: SeriesOptionsType = {
+      name: FOOD,
+      type: 'line',
+      yAxis: 1,
+      tooltip: {
+        valueSuffix: 'g',
+      },
+      data: rev.map(f => ({
+        x: f.date.getTime(),
+        y: f.foodPortion,
+        name: `Étel: ${f.foodName}`
+      }))
+    }
+
+    const dogWeightSeries: SeriesOptionsType = {
+      name: DOG_WEIGHT,
+      type: 'line',
+      yAxis: 0,
+      tooltip: {
+        valueSuffix: 'kg'
+      },
+      data: rev.map(f => ({
+        x: f.date.getTime(),
+        y: f.dogWeight,
+        name: `Étel: ${f.foodName}`
+      }))
+    }
+
+    this.chart.removeSeries(0)
+    this.chart.removeSeries(0)
+
+    this.chart.addSeries(foodSeries, true, true)
+    this.chart.addSeries(dogWeightSeries, true, true)
+
+    this.chart.ref$.subscribe(ref => {
+      const axis = ref.xAxis[0]
+      rev.forEach(e => axis.removePlotBand(e.foodName))
+
+      for (let i = 0; i < rev.length - 1; i++) {
+        const curr = rev[i]
+        const next = rev[i + 1]
+
+        axis.addPlotBand({
+          from: curr.date.getTime(),
+          to: next.date.getTime(),
+          id: curr.foodName,
+          zIndex: -1,
+          color: COLOR_BANDS[i % COLOR_BANDS.length],
+          label: {
+            text: curr.foodName,
+            align: 'center',
+            style: {
+              fontSize: '10px',
+            }
+          }
+        })
+      }
+    })
   }
 
 }
