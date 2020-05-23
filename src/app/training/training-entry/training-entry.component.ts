@@ -71,7 +71,7 @@ export class TrainingEntryComponent {
   }
 
   compareWithType(a: TrainingType, b: TrainingType): boolean {
-    return a.hu === b.hu
+    return a?.hu === b?.hu
   }
 
   deleteEntry() {

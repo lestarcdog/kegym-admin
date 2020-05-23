@@ -1,0 +1,40 @@
+<ng-container *ngIf="dog">
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let type of dog.assistanceTypes">
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{getAssistanceTypeName(type)}} mérföldkövek</mat-panel-title>
+        <mat-panel-description>{{calcMilestoneHeader(type)}}</mat-panel-description>
+      </mat-expansion-panel-header>
+      <app-training-milestones [dogId]="dogId" [assistanceType]="type" [milestone]="getTrainingMilestoneOf(type)">
+      </app-training-milestones>
+    </mat-expansion-panel>
+  </mat-accordion>
+</ng-container>
+
+<div id="container">
+  <div>
+    <button mat-raised-button color="primary" (click)="addNewEntry()" id="new-button">Új bejegyzés</button>
+    <mat-form-field appearance="standard">
+      <mat-label>Gyakorlat</mat-label>
+      <mat-select [formControl]="trainingTypeFilter">
+        <mat-option [value]=""><strong>Összes mutatása</strong></mat-option>
+        <mat-option *ngFor="let t of trainingTypes" [value]="t.hu">
+          {{t.hu}} / {{t.en}}
+        </mat-option>
+      </mat-select>
+      <mat-error>Kötelező mező</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="newEntry" id="new-entry-item">
+    <app-training-entry [entry]="newEntry" (save)="saveEntry($event)" (delete)="deleteEntry($event)"
+      [isSaving]="loading" [trainingTypes]="trainingTypes">
+    </app-training-entry>
+  </div>
+
+  <div class="entry-item" *ngFor="let entry of filteredEntries">
+    <app-training-entry [entry]="entry" (save)="saveEntry($event)" (delete)="deleteEntry($event)" [isSaving]="loading"
+      [trainingTypes]="trainingTypes">
+    </app-training-entry>
+  </div>
+</div>
