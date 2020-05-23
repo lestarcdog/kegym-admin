@@ -82,14 +82,6 @@ export class ChartComponent implements OnInit {
     }
   }
 
-  @Input()
-  set hasFocus(focus: boolean) {
-    if (focus) {
-      // there is some drawing issue with the sidenav and highcharts and the graph is cut off
-      setTimeout(() => this.chart.ref$.subscribe(r => r.reflow()), 100)
-    }
-  }
-
   chart: Chart
 
   ngOnInit(): void {

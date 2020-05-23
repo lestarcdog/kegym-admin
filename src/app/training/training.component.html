@@ -2,11 +2,13 @@
 
 <mat-tab-group>
   <mat-tab label="Napló">
-    <app-training-list [dog]="dog" [dogId]="dogId" [loading]="loading" [entries]="entries" [trainingTypes]="trainingTypes" (save)="saveEntry($event)"
-      (delete)="deleteEntry($event)">
+    <app-training-list [dog]="dog" [dogId]="dogId" [loading]="loading" [entries]="entries"
+      [trainingTypes]="trainingTypes" (save)="saveEntry($event)" (delete)="deleteEntry($event)">
     </app-training-list>
   </mat-tab>
   <mat-tab label="Grafikon">
-    <app-training-chart></app-training-chart>
+    <ng-template matTabContent>
+      <app-training-chart [entries]="entries"></app-training-chart>
+    </ng-template>
   </mat-tab>
 </mat-tab-group>
