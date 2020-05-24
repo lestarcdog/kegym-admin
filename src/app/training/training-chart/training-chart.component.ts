@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Chart } from 'angular-highcharts';
 import { PointOptionsObject, SeriesLineOptions } from 'highcharts';
 import { TrainingEntryItem } from '../training.component';
@@ -15,6 +16,8 @@ export class TrainingChartComponent implements OnInit {
   private seriesCount = 0
 
   private allEntries: TrainingEntryItem[] = []
+
+  showAllSeries = true
 
   @Input()
   set entries(items: TrainingEntryItem[]) {
@@ -79,19 +82,35 @@ export class TrainingChartComponent implements OnInit {
       const name = trainingItems[0].type.hu
       const data = trainingItems.map(d => ({
         x: d.date.getTime(),
-        y: d.progress
+        y: d.progress,
+        comment: d.comment
       } as PointOptionsObject))
 
       return {
         name,
         data,
         tooltip: {
-          valueSuffix: '%'
+          pointFormatter() {
+            const t = this as any
+            const progressLine = `Haladás: <strong>${t.y}%</strong>`
+            if (t.comment) {
+              return `${progressLine}<br/><em>${t.comment}</em>`
+            } else {
+              return progressLine
+            }
+          }
         }
       } as SeriesLineOptions
     }).forEach(o => this.chart.addSeries(o, true, true))
 
     this.seriesCount = Object.keys(groupedByType).length
+  }
+
+  toggleSeries(change: MatCheckboxChange) {
+    this.showAllSeries = change.checked
+    this.chart.ref$.subscribe(c => {
+      c.series.forEach(s => this.showAllSeries ? s.show() : s.hide())
+    })
   }
 
 }
