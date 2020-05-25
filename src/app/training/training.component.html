@@ -1,45 +1,14 @@
-<h1>{{dog?.name}} - edzés naplója</h1>
+<h3>{{dog?.name}} - edzés naplója</h3>
 
-<ng-container *ngIf="dog">
-  <mat-accordion>
-    <mat-expansion-panel *ngFor="let type of dog.assistanceTypes">
-      <mat-expansion-panel-header>
-        <mat-panel-title>{{getAssistanceTypeName(type)}} mérföldkövek</mat-panel-title>
-        <mat-panel-description>{{calcMilestoneHeader(type)}}</mat-panel-description>
-      </mat-expansion-panel-header>
-      <app-training-milestones [dogId]="dogId" [assistanceType]="type" [milestone]="getTrainingMilestoneOf(type)">
-      </app-training-milestones>
-    </mat-expansion-panel>
-  </mat-accordion>
-</ng-container>
-
-<mat-divider></mat-divider>
-
-<div id="container">
-  <div>
-    <button mat-raised-button color="primary" (click)="addNewEntry()" id="new-button">Új bejegyzés</button>
-    <mat-form-field appearance="standard">
-      <mat-label>Gyakorlat</mat-label>
-      <mat-select [formControl]="trainingTypeFilter">
-        <mat-option [value]=""><strong>Összes mutatása</strong></mat-option>
-        <mat-option *ngFor="let t of trainingTypes" [value]="t.hu">
-          {{t.hu}} / {{t.en}}
-        </mat-option>
-      </mat-select>
-      <mat-error>Kötelező mező</mat-error>
-    </mat-form-field>
-  </div>
-
-  <div *ngIf="newEntry" id="new-entry-item">
-    <app-training-entry [entry]="newEntry" (save)="saveEntry($event)" (delete)="deleteEntry($event)"
-      [isSaving]="loading" [trainingTypes]="trainingTypes">
-    </app-training-entry>
-  </div>
-
-  <div class="entry-item" *ngFor="let entry of filteredEntries">
-    <app-training-entry [entry]="entry" (save)="saveEntry($event)" (delete)="deleteEntry($event)" [isSaving]="loading"
-      [trainingTypes]="trainingTypes">
-    </app-training-entry>
-  </div>
-
-</div>
+<mat-tab-group>
+  <mat-tab label="Napló">
+    <app-training-list [dog]="dog" [dogId]="dogId" [loading]="loading" [entries]="entries"
+      [trainingTypes]="trainingTypes" (save)="saveEntry($event)" (delete)="deleteEntry($event)">
+    </app-training-list>
+  </mat-tab>
+  <mat-tab label="Grafikon">
+    <ng-template matTabContent>
+      <app-training-chart [entries]="entries"></app-training-chart>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

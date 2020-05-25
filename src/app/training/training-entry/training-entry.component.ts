@@ -71,7 +71,13 @@ export class TrainingEntryComponent {
   }
 
   compareWithType(a: TrainingType, b: TrainingType): boolean {
-    return a.hu === b.hu
+    if (a?.hu && b?.hu) {
+      return a?.hu.toLocaleLowerCase().replace(' ', '') === b?.hu.toLocaleLowerCase().replace(' ', '')
+    } else if (!a && !b) {
+      return true
+    } else {
+      return false
+    }
   }
 
   deleteEntry() {

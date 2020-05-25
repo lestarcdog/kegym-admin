@@ -14,6 +14,8 @@ import { DocumentSelectComponent } from './documents/document-select/document-se
 import { DocumentsComponent } from './documents/documents.component'
 import { DogListComponent } from './doglist/dog-list.component'
 import { MissingDocumentsComponent } from './doglist/missing-documents/missing-documents.component'
+// load once
+import './highcharts.module'
 import { LoginComponent } from './login/login.component'
 import { NavComponent } from './nav/nav.component'
 import { NewDogComponent } from './newdog/new-dog.component'
@@ -65,7 +67,7 @@ const dateFormat: MatDateFormats = {
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'hu-HU' },
     { provide: LOCALE_ID, useValue: 'hu' },
-    { provide: MAT_DATE_FORMATS, useValue: dateFormat}
+    { provide: MAT_DATE_FORMATS, useValue: dateFormat }
   ],
   bootstrap: [AppComponent]
 })

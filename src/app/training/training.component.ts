@@ -1,16 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
 import { AngularFirestore, DocumentSnapshot, QuerySnapshot } from '@angular/fire/firestore'
-import { FormControl } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { ActivatedRoute } from '@angular/router'
-import moment from 'moment'
-import { Subscription } from 'rxjs'
 import { map, switchMap } from 'rxjs/operators'
-import { AssistanceDogType, Dog, TrainingMilestone } from 'src/domain/dog'
+import { Dog } from 'src/domain/dog'
 import { TrainingEntry, TrainingType } from 'src/domain/training'
-import { firebaseToMomentDate } from '../service/time-util'
-import { milestoneTimeDifference } from './milestone-time-diff'
 
 
 export interface TrainingEntryItem extends TrainingEntry {
@@ -21,7 +16,7 @@ export interface TrainingEntryItem extends TrainingEntry {
   templateUrl: './training.component.html',
   styleUrls: ['./training.component.scss']
 })
-export class TrainingComponent implements OnInit, OnDestroy {
+export class TrainingComponent implements OnInit {
 
   constructor(
     private store: AngularFirestore,
@@ -31,15 +26,10 @@ export class TrainingComponent implements OnInit, OnDestroy {
   ) { }
 
   entries: TrainingEntryItem[] = []
-  filteredEntries: TrainingEntryItem[] = []
-  newEntry: TrainingEntryItem = undefined
   dogId: string
   dog: Dog
   loading = false
 
-  private sub = new Subscription()
-
-  trainingTypeFilter = new FormControl('')
   trainingTypes: TrainingType[] = []
 
   ngOnInit(): void {
@@ -56,8 +46,6 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
     this.readTrainingTypes()
 
-    const filterSub = this.trainingTypeFilter.valueChanges.subscribe(key => this.filterEntries(key))
-    this.sub.add(filterSub)
 
   }
 
@@ -65,19 +53,6 @@ export class TrainingComponent implements OnInit, OnDestroy {
     this.store.collection('training-types').get().subscribe((snap: QuerySnapshot<TrainingType>) =>
       this.trainingTypes = snap.docs.map(d => d.data())
     )
-  }
-
-  ngOnDestroy(): void {
-    this.sub.unsubscribe()
-  }
-
-  private filterEntries(key: string) {
-    if (key) {
-      this.filteredEntries = this.entries.filter(e => e.type.hu === key)
-    } else {
-      this.filteredEntries = this.entries
-    }
-
   }
 
   private refreshEntries() {
@@ -94,32 +69,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
           createdBy: d.createdBy,
         }
       })
-      this.filterEntries(this.trainingTypeFilter.value)
     }, err => console.error(err))
-  }
-
-  calcMilestoneHeader(type: AssistanceDogType): string {
-    if (this.dog && this.dog.trainingMileStones && this.dog.trainingMileStones[type]) {
-      const milestone = this.dog.trainingMileStones[type]
-      let date: moment.Moment
-      let preText: string
-      if (milestone.examDate) {
-        preText = 'Vizsga'
-        date = firebaseToMomentDate(milestone.examDate)
-      } else if (milestone.handoverDate) {
-        preText = 'Átadás'
-        date = firebaseToMomentDate(milestone.handoverDate)
-      } else if (milestone.trainingStartDate) {
-        preText = 'Kiképzés'
-        date = firebaseToMomentDate(milestone.trainingStartDate)
-      } else {
-        return 'Nem kezdődött el a kiképzés'
-      }
-
-      return `${preText}${milestoneTimeDifference(date)}`
-    } else {
-      return 'Nem kezdődött el a kiképzés'
-    }
   }
 
   private getAllEntries(dogId: string) {
@@ -134,20 +84,6 @@ export class TrainingComponent implements OnInit, OnDestroy {
     return this.getDogDoc(dogId).collection('training').doc<TrainingEntry>(trainingId)
   }
 
-  getTrainingMilestoneOf(id: AssistanceDogType): TrainingMilestone | undefined {
-    return this.dog && this.dog.trainingMileStones ? this.dog.trainingMileStones[id] : undefined
-  }
-
-  getAssistanceTypeName(id: AssistanceDogType) {
-    return AssistanceDogType[id]
-  }
-
-  addNewEntry() {
-    if (!this.newEntry) {
-      this.newEntry = {} as TrainingEntryItem
-    }
-  }
-
   async saveEntry(item: TrainingEntryItem) {
     this.loading = true
     try {
@@ -158,7 +94,6 @@ export class TrainingComponent implements OnInit, OnDestroy {
       } else {
         console.log('Creating new entry', firebaseEntry)
         await this.getDogDoc(this.dogId).collection<TrainingEntry>('training').add(firebaseEntry)
-        this.newEntry = undefined
       }
       this.refreshEntries()
       this.snack.open(`Edzés ${item.date.toLocaleDateString()} sikeresen frissítve`, 'Ok', { duration: 2000 })
@@ -184,22 +119,18 @@ export class TrainingComponent implements OnInit, OnDestroy {
   }
 
   async deleteEntry(docId: string) {
-    if (!docId) {
-      this.newEntry = undefined
-      return
-    }
-
-    this.loading = true
-    try {
-      await this.getTrainingDoc(this.dogId, docId).delete()
-      this.refreshEntries()
-      this.snack.open('Bejegyzés törölve', 'Ok', { duration: 2000 })
-    } catch (e) {
-      console.error(e)
-      this.snack.open(`Nem lehetett törölni a ${docId} bejegyzést: ${e.code} - ${e.message}`, 'Francba')
-    } finally {
-      this.loading = false
+    if (docId) {
+      this.loading = true
+      try {
+        await this.getTrainingDoc(this.dogId, docId).delete()
+        this.refreshEntries()
+        this.snack.open('Bejegyzés törölve', 'Ok', { duration: 2000 })
+      } catch (e) {
+        console.error(e)
+        this.snack.open(`Nem lehetett törölni a ${docId} bejegyzést: ${e.code} - ${e.message}`, 'Francba')
+      } finally {
+        this.loading = false
+      }
     }
   }
-
 }

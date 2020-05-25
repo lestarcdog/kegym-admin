@@ -4,5 +4,6 @@
       "source.organizeImports": true
     },
     "jest.pathToJest": "functions/node_modules/.bin/jest",
-    "jest.pathToConfig": "functions/jest.config.js"
+    "jest.pathToConfig": "functions/jest.config.js",
+    "typescriptHero.imports.insertSemicolons": false
 }
