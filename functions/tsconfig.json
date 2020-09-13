@@ -8,7 +8,7 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "noImplicitAny": false,
-    "target": "es2017",
+    "target": "ES2018",
     "skipLibCheck": true,
     "esModuleInterop": true
   },

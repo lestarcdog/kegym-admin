@@ -19,7 +19,7 @@ async function sendWelcomeEmail(doc: DocumentEntry, dog: Dog ) {
   const mailOptions: nodemailer.SendMailOptions = {
     from: `Kutyaval egy mosolyért <kutyavalegymosolyert@gmail.com>`,
     to: email,
-    cc: ['juharosagota@gmail.com']
+    cc: ['juharosagota@gmail.com', 'kutyaslany.dia@gmail.com']
   };
 
   // The user subscribed to the newsletter.

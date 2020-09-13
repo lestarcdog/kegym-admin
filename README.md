@@ -17,6 +17,19 @@ Upload new function
 firebase deploy --only functions
 ```
 
+### Setting firebase env vars
+
+Reading current env vars
+```
+firebase functions:config:get
+```
+
+Setting gmail sending email address
+```
+firebase functions:config:set gmail.email="kutyavalegymosolyert@gmail.com"
+```
+
+
 ## Exporting data from firebase firestore
 
 Open cloud console 
