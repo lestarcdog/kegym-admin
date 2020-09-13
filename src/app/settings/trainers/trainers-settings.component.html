@@ -1,15 +1,23 @@
 <h1>Kiképzők</h1>
 
-<button mat-raised-button color="primary" (click)="addNewEmptyTrainer()">Új kiképző</button>
+<div id="header">
+  <button mat-raised-button color="primary" (click)="addNewEmptyTrainer()">Új kiképző</button>
+
+  <mat-form-field id="search-field">
+    <mat-label>Keresés</mat-label>
+    <input matInput [formControl]="searchControl" placeholder="Kiképző neve">
+  </mat-form-field>
+</div>
 
 <ng-container>
-  <mat-card *ngFor="let trainer of trainersForm">
+  <mat-card *ngFor="let trainer of visibleTrainers">
     <form [formGroup]="trainer" (ngSubmit)="save(trainer)">
       <mat-card-title>{{trainerName.value}}</mat-card-title>
       <mat-card-subtitle *ngIf="trainer.value.createdAt">
         Frissítve {{trainer.value.createdAt | date}} - {{trainer.value.createdBy}}
       </mat-card-subtitle>
       <mat-card-content id="form-container">
+
         <mat-form-field appearance="fill">
           <mat-label>Név</mat-label>
           <input matInput formControlName="name" #trainerName>
@@ -29,11 +37,11 @@
           <input matInput formControlName="email" type="email">
           <mat-error>Hibás email formátum</mat-error>
         </mat-form-field>
-
       </mat-card-content>
       <mat-card-actions>
         <button [disabled]="trainer.invalid" mat-raised-button color="primary"
           type="submit">{{trainer.get('trainerId').value ? 'Módosít' : 'Mentés'}}</button>
+        <button type="button" *ngIf="trainer.value.trainerId" class="delete-button" mat-button (click)="delete(trainer)">Törlés</button>
       </mat-card-actions>
     </form>
   </mat-card>

@@ -1,5 +1,11 @@
 @use "src/colors";
 
+#header {
+  display: flex;
+  flex-direction: column;
+  max-width: 350px;
+}
+
 mat-card {
   background-color: colors.$lighter-green-bg;
   margin: 10px 0;
@@ -11,4 +17,8 @@ mat-card {
   mat-form-field {
     margin: 0 15px;
   }
+}
+
+#search-field {
+  margin: 10px 0;
 }
