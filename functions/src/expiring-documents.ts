@@ -34,7 +34,7 @@ function doesDogNeedDocument(dog: Dog, docType: string): boolean {
 
   // By default every dog is a matesze dog
   if (dog.trainingMileStones) {
-    const now = new Date()
+    const now = Date.now()
     const trainings = Object.keys(dog.trainingMileStones)
 
     const isDocTypeAndTrainingMatch = trainingKey => {

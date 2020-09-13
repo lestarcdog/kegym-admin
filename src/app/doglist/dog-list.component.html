@@ -8,6 +8,13 @@
 </mat-form-field>
 
 <table mat-table [dataSource]="dogList" matSort>
+  <ng-container matColumnDef="index">
+    <th mat-header-cell *matHeaderCellDef> # </th>
+    <td mat-cell *matCellDef="let element; let i = index;">
+      <span class="table-index">{{i + 1}}.</span>
+    </td>
+  </ng-container>
+
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Kutya neve </th>
     <td mat-cell *matCellDef="let element"> {{element.name}} </td>

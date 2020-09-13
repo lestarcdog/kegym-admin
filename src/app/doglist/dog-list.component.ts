@@ -15,7 +15,7 @@ export class ListDog extends Dog {
   docId: string
 }
 
-const fullColumns = ['name', 'birthDate', 'assistanceTypes', 'owner', 'phone', 'trainer', 'actions']
+const fullColumns = ['index', 'name', 'birthDate', 'assistanceTypes', 'owner', 'phone', 'trainer', 'actions']
 const shortColumns = ['name', 'owner', 'actions']
 
 @Component({
