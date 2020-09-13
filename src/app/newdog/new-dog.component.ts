@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
-import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore'
+import { AngularFirestore, DocumentSnapshot, QuerySnapshot } from '@angular/fire/firestore'
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms'
 import { MatCheckboxChange } from '@angular/material/checkbox'
 import { MatSnackBar } from '@angular/material/snack-bar'
@@ -184,6 +184,14 @@ export class NewDogComponent implements OnInit {
 
     console.log('Saving new dog', newDog)
     try {
+
+      const existingDogWidthChipNumber = await this.checkUniqueChipNumber(newDog.chipNumber)
+      if (existingDogWidthChipNumber) {
+        alert(`Mentés sikertelen. A chip azonosító nem egyedi. ` +
+          `Létező chipszám: ${existingDogWidthChipNumber.name} - (${existingDogWidthChipNumber.owner.name})`)
+        return
+      }
+
       if (this.originalDogId) {
         await this.storage.collection<Dog>('dogs').doc(this.originalDogId).set(newDog)
         this.snackBar.open('Sikeres frissítés', 'Ok')
@@ -198,6 +206,12 @@ export class NewDogComponent implements OnInit {
     } finally {
       this.isSaving = false
     }
+  }
+
+  private async checkUniqueChipNumber(chipNumber: string) {
+    const result = await this.storage.collection<Dog>('dogs', ref => ref.where('chipNumber', '==', chipNumber).limit(1))
+      .get().toPromise() as QuerySnapshot<Dog>
+    return mapFirebaseDog(result.docs[0]?.data())
   }
 
   async removeDog() {
