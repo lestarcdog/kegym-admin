@@ -2,10 +2,30 @@
 
 <app-missing-documents *ngIf="dogList" [dogs]="dogList.data"></app-missing-documents>
 
-<mat-form-field id="search-field">
-  <mat-label>Keresés</mat-label>
-  <input matInput [formControl]="filterKeyControl" placeholder="Kutya név, Tulajdonos név vagy telefonszám">
-</mat-form-field>
+<div id="search-field-container">
+  <mat-form-field id="search-field">
+    <mat-label>Kutya név</mat-label>
+    <input matInput [formControl]="dogNameFilter" placeholder="Kutya neve">
+  </mat-form-field>
+
+  <mat-form-field id="search-field">
+    <mat-label>Munka típus</mat-label>
+    <mat-select [formControl]="assistanceTypeFilter">
+      <mat-option [value]=""> - </mat-option>
+      <mat-option *ngFor="let type of assistanceTypes" [value]="type.key">
+        {{type.value}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field id="search-field">
+    <mat-label>Mindenben keres</mat-label>
+    <input matInput [formControl]="compositeSearchFilter" placeholder="Összetett kereső minden mezőben">
+  </mat-form-field>
+
+  <button id="search-delete-button" mat-button [disabled]="!hasAnySearchFieldsSet()"
+    (click)="clearSearchFields()">Mindent mutat</button>
+</div>
 
 <table mat-table [dataSource]="dogList" matSort>
   <ng-container matColumnDef="index">
@@ -62,8 +82,8 @@
         matTooltip="Dokumentumok/iratok">
         <mat-icon>folder</mat-icon>
       </button>
-      <button mat-icon-button
-        [routerLink]="['/dog', 'provision', {dogId: element.docId, dogName: element.name}]" matTooltip="Etetési napló">
+      <button mat-icon-button [routerLink]="['/dog', 'provision', {dogId: element.docId, dogName: element.name}]"
+        matTooltip="Etetési napló">
         <mat-icon>fastfood</mat-icon>
       </button>
       <button mat-icon-button [routerLink]="['/dog', element.docId, 'edit']" matTooltip="Szerkesztés">

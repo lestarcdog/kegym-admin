@@ -2,9 +2,20 @@ table {
   width: 100%;
 }
 
-#search-field {
+#search-field-container {
+  display: flex;
   margin-top: 5px;
-  width: 80%;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+#search-field {
+  margin-left: 15px;
+  min-width: 250px;
+}
+
+#search-delete-button {
+  margin-left: 25px;
 }
 
 .mat-table {
