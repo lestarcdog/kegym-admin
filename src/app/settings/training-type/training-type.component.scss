@@ -1,3 +1,5 @@
+@use "src/colors";
+
 #new-training-type {
   display: flex;
   flex-direction: row;
@@ -6,6 +8,11 @@
   mat-form-field {
     margin: 0 10px;
   }
+}
+
+mat-card {
+  background-color: colors.$lighter-green-bg;
+  margin: 5px 0;
 }
 
 .types {

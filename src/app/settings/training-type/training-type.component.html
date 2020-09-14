@@ -14,13 +14,14 @@
   <button mat-raised-button color="primary" type="submit">Mentés</button>
 </form>
 
-<div *ngFor="let entry of trainingTypes" class="types">
-  <p>
-    <strong>Magyar: </strong>{{entry.hu}}
+<mat-card *ngFor="let entry of trainingTypes" class="types">
+  <mat-card-title>{{entry.hu}}</mat-card-title>
+  <mat-card-subtitle>Létrehozta: {{entry.createdBy}} - {{entry.createdAt | date:'medium'}}</mat-card-subtitle>
+  <mat-card-content>
+    <strong>Magyar: </strong>{{entry.hu}}<br />
     <strong>Angol: </strong>{{entry.en ? entry.en : '-'}}
-  </p>
-  <p>
-    Létrehozta: {{entry.createdBy}} - {{entry.createdAt | date:'medium'}}
-  </p>
-
-</div>
+  </mat-card-content>
+  <mat-card-actions>
+    <button type="button" mat-button (click)="delete(entry)">Törlés</button>
+  </mat-card-actions>
+</mat-card>

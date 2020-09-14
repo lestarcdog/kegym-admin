@@ -31,15 +31,20 @@ export class TrainingTypeComponent implements OnInit {
 
   private refresh() {
     this.clearForm()
-    this.store.collection('training-types').get().subscribe((snap: QuerySnapshot<TrainingType>) => {
-      this.trainingTypes = snap.docs.map(d => {
-        const data = d.data()
-        return {
-          ...data,
-          createdAt: firebaseToDate(data.createdAt)
-        }
+    this.store.collection('training-types', ref => ref.orderBy('hu')).get()
+      .subscribe((snap: QuerySnapshot<TrainingType>) => {
+        this.trainingTypes = snap.docs
+          .map(d => {
+            const data = d.data()
+            return {
+              ...data,
+              id: d.id,
+              createdAt: firebaseToDate(data.createdAt),
+              deleted: firebaseToDate(data.deleted)
+            } as TrainingType
+          })
+          .filter(d => d.deleted == null)
       })
-    })
   }
 
   clearForm() {
@@ -62,6 +67,21 @@ export class TrainingTypeComponent implements OnInit {
       } catch (e) {
         console.error(e)
         this.snack.open('Nem sikerült a mentés', 'Az baj')
+      }
+    }
+  }
+
+  async delete(training: TrainingType) {
+    if (training.id && confirm(`Biztos törölni szeretné a '${training.hu}' gyakorlatot?`)) {
+      try {
+        await this.store.collection<TrainingType>('training-types').doc(training.id).update({
+          deleted: new Date()
+        } as Partial<TrainingType>)
+        this.snack.open('Gyakorlat törölve', 'Ok', { duration: 2000 })
+        this.refresh()
+      } catch (e) {
+        console.error(e)
+        this.snack.open(`Nem sikerült a gyakorlat törlése`, 'Francba')
       }
     }
   }

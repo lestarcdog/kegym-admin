@@ -1,8 +1,11 @@
 export class TrainingType {
+  // firebase auto generated uid
+  id?: string
   hu: string
   en?: string
   createdAt: Date
   createdBy: string
+  deleted?: Date
 }
 
 export interface TrainingEntry {
