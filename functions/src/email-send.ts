@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions'
 import * as nodemailer from 'nodemailer'
+import { DocumentType } from '../../src/domain/document'
 import { ExpiringData } from './types'
 
 
@@ -52,21 +53,22 @@ export async function sendWarningEmail(data: ExpiringData) {
     to: email,
     cc: ['juharosagota@gmail.com', 'kutyaslany.dia@gmail.com']
   }
+  console.log('Processing document', document)
 
   const { prevDocument } = document
+  const documentName = DocumentType[document.missingDocumentType]
 
-  console.log('Processing document')
 
   const userAction = prevDocument ? 'hamarosan lejár/vagy lejárt' : 'nem lett még feltöltve'
   const lastDocumentRow = prevDocument ? `Utoljára feltöltve: ${prevDocument.documentDate.toLocaleDateString('hu')}` : ''
   const untilExpiration = document.expiryDate ? `A határidő: ${document.expiryDate.toLocaleDateString('hu')}` : 'A határidő: azonnal'
 
-  mailOptions.subject = `Hamarosan lejáró ${document.missingDocumentType} dokumentum: ${dog.name}(${dog.chipNumber})`
+  mailOptions.subject = `Hamarosan lejáró ${documentName} dokumentum: ${dog.name}(${dog.chipNumber})`
   mailOptions.html = `
     Kedves ${ownerName},
     <br />
     <br />
-    A <strong>${dog.name}</strong> kutyádhoz tartozó <em>'${document.missingDocumentType}'</em> <strong>${userAction}</strong>.
+    A <strong>${dog.name}</strong> kutyádhoz tartozó <em>'${documentName}'</em> <strong>${userAction}</strong>.
     <br />
     <strong>${untilExpiration}</strong>
     <br />
