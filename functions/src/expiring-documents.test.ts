@@ -92,11 +92,12 @@ describe('expiring documents', () => {
   it('should include dogs which has exam date set in the past and never uploaded docs', async () => {
     mockAllDogs = Promise.resolve([wrapSnapshot(createNewDog('bömbi', minusDays(700)))])
     const result = await getAllNewExpiringDocs()
+    console.log('Result', result)
     expect(result).toHaveLength(2)
-    expect(result[0].missingDocumentType).toBe('HEALTH_CERTIFICATE')
-    expect(result[0].prevDocument).toBeNull()
-    expect(result[1].missingDocumentType).toBe('MATESZE_THERAPY_CERTIFICATES')
-    expect(result[1].prevDocument).toBeNull()
+    expect(result[0].document.missingDocumentType).toBe('HEALTH_CERTIFICATE')
+    expect(result[0].document.prevDocument).toBeNull()
+    expect(result[1].document.missingDocumentType).toBe('MATESZE_THERAPY_CERTIFICATES')
+    expect(result[1].document.prevDocument).toBeNull()
   })
 
   it('should not include dogs which has exam date set in the future', async () => {
@@ -113,10 +114,10 @@ describe('expiring documents', () => {
     ])
     const result = await getAllNewExpiringDocs()
     expect(result).toHaveLength(2)
-    expect(result[0].missingDocumentType).toBe('HEALTH_CERTIFICATE')
-    expect(result[0].prevDocument).toBeDefined()
-    expect(result[1].missingDocumentType).toBe('MATESZE_THERAPY_CERTIFICATES')
-    expect(result[1].prevDocument).toBeDefined()
+    expect(result[0].document.missingDocumentType).toBe('HEALTH_CERTIFICATE')
+    expect(result[0].document.prevDocument).toBeDefined()
+    expect(result[1].document.missingDocumentType).toBe('MATESZE_THERAPY_CERTIFICATES')
+    expect(result[1].document.prevDocument).toBeDefined()
   })
 
   it('should not report again missing docs if it has been already reported', async () => {
@@ -124,7 +125,7 @@ describe('expiring documents', () => {
     mockActiveDocs = Promise.resolve([wrapSnapshot(createExpiringDoc('dogId', 'HEALTH_CERTIFICATE'))])
     const result = await getAllNewExpiringDocs()
     expect(result).toHaveLength(1)
-    expect(result[0].missingDocumentType).toBe('MATESZE_THERAPY_CERTIFICATES')
+    expect(result[0].document.missingDocumentType).toBe('MATESZE_THERAPY_CERTIFICATES')
   })
 
   it('should report psychiatric dogs the yearly health certificate', async () => {

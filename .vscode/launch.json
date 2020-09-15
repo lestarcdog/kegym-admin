@@ -9,7 +9,8 @@
             "name": "VS Code Firebase functions Jest",
             "request": "launch",
             "args": [
-                "--runInBand"
+              "${workspaceRoot}/node_modules/jest/bin/jest.js",
+              "--runInBand"
             ],
             "cwd": "${workspaceFolder}/functions",
             "console": "integratedTerminal",

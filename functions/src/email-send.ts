@@ -1,31 +1,89 @@
 import * as functions from 'firebase-functions'
 import * as nodemailer from 'nodemailer'
-import { DocumentEntry } from '../../src/domain/document'
-import { Dog } from '../../src/domain/dog'
+import { ExpiringData } from './types'
 
-const gmailEmail = functions.config().gmail.email;
-const gmailPassword = functions.config().gmail.password;
+
+const gmailEmail = functions.config().gmail.email
+const gmailPassword = functions.config().gmail.password
 const mailTransport = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: gmailEmail,
     pass: gmailPassword,
   },
-});
+})
+
+// test data
+// const data: ExpiringData = {
+//   dog: {
+//     name: 'Bömbi',
+//     chipNumber: '1234',
+//     owner: {
+//       name: 'Józsi',
+//       email: 'lestarcdog@yahoo.com'
+//     }
+//   } as any,
+//   document: {
+//     dogId: '1234',
+//     expiryDate: new Date(),
+//     missingDocumentType: DocumentType.HEALTH_CERTIFICATE,
+//     prevDocument: null
+//   }
+// }
+
+// const mailTransport = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: 'kutyavalegymosolyert@gmail.com',
+//     pass: 'Csabus89',
+//   },
+// })
 
 //@ts-ignore
-async function sendWelcomeEmail(doc: DocumentEntry, dog: Dog ) {
-  const email = ''
+export async function sendWarningEmail(data: ExpiringData) {
+  const { dog, document } = data
+  const { name: ownerName, email } = dog.owner
+  if (!email) {
+    console.warn(`Dog owner {} doesn't have an email set for dog {}`, ownerName, dog.name)
+    return
+  }
   const mailOptions: nodemailer.SendMailOptions = {
-    from: `Kutyaval egy mosolyért <kutyavalegymosolyert@gmail.com>`,
+    from: `Kutyával egy mosolyért <kutyavalegymosolyert@gmail.com>`,
     to: email,
     cc: ['juharosagota@gmail.com', 'kutyaslany.dia@gmail.com']
-  };
+  }
 
-  // The user subscribed to the newsletter.
-  // mailOptions.subject = `Welcome to ${APP_NAME}!`;
-  // mailOptions.html = `Hey ${displayName || ''}! Welcome to ${APP_NAME}. I hope you will enjoy our service.`;
-  await mailTransport.sendMail(mailOptions);
-  console.log('New welcome email sent to:', email);
-  return null;
+  const { prevDocument } = document
+
+  console.log('Processing document')
+
+  const userAction = prevDocument ? 'hamarosan lejár/vagy lejárt' : 'nem lett még feltöltve'
+  const lastDocumentRow = prevDocument ? `Utoljára feltöltve: ${prevDocument.documentDate.toLocaleDateString('hu')}` : ''
+  const untilExpiration = document.expiryDate ? `A határidő: ${document.expiryDate.toLocaleDateString('hu')}` : 'A határidő: azonnal'
+
+  mailOptions.subject = `Hamarosan lejáró ${document.missingDocumentType} dokumentum: ${dog.name}(${dog.chipNumber})`
+  mailOptions.html = `
+    Kedves ${ownerName},
+    <br />
+    <br />
+    A <strong>${dog.name}</strong> kutyádhoz tartozó <em>'${document.missingDocumentType}'</em> <strong>${userAction}</strong>.
+    <br />
+    <strong>${untilExpiration}</strong>
+    <br />
+    ${lastDocumentRow}
+    <br />
+    <br />
+    Kérlek minél hamarabb küld el a hiányzó dokumentumokat (email) a területi vezetődnek!
+    <br />
+    <br />
+    Üdvözlettel,
+    <br />
+    KEMA Robot Kutya
+  `
+  try {
+    await mailTransport.sendMail(mailOptions)
+    console.log('Warning email sent to:', email)
+  } catch (e) {
+    console.error('Could not send email to', dog.owner.email, e)
+  }
 }

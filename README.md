@@ -17,6 +17,13 @@ Upload new function
 firebase deploy --only functions
 ```
 
+### Jest testing locally
+
+Run jest
+`node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand`
+
+Open chrome: `chrome://inspect`
+
 ### Setting firebase env vars
 
 Reading current env vars
