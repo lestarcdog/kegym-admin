@@ -34,8 +34,8 @@ const mailTransport = nodemailer.createTransport({
 // const mailTransport = nodemailer.createTransport({
 //   service: 'gmail',
 //   auth: {
-//     user: 'kutyavalegymosolyert@gmail.com',
-//     pass: 'Csabus89',
+//     user: 'XXX',
+//     pass: 'YYY',
 //   },
 // })
 

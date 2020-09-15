@@ -10,7 +10,8 @@
     "noImplicitAny": false,
     "target": "ES2018",
     "skipLibCheck": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "compileOnSave": true,
   "include": [
