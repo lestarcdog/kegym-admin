@@ -184,18 +184,17 @@ export class NewDogComponent implements OnInit {
 
     console.log('Saving new dog', newDog)
     try {
-
-      const existingDogWidthChipNumber = await this.checkUniqueChipNumber(newDog.chipNumber)
-      if (existingDogWidthChipNumber) {
-        alert(`Mentés sikertelen. A chip azonosító nem egyedi. ` +
-          `Létező chipszám: ${existingDogWidthChipNumber.name} - (${existingDogWidthChipNumber.owner.name})`)
-        return
-      }
-
       if (this.originalDogId) {
         await this.storage.collection<Dog>('dogs').doc(this.originalDogId).set(newDog)
         this.snackBar.open('Sikeres frissítés', 'Ok')
       } else {
+        const existingDogWidthChipNumber = await this.checkUniqueChipNumber(newDog.chipNumber)
+        if (existingDogWidthChipNumber) {
+          alert(`Mentés sikertelen. A chip azonosító nem egyedi. ` +
+            `Létező chipszám: ${existingDogWidthChipNumber.name} - (${existingDogWidthChipNumber.owner.name})`)
+          return
+        }
+
         await this.storage.collection<Dog>('dogs').add(newDog)
         this.snackBar.open('Sikeres mentés', 'Ok')
         this.router.navigate(['/dog-list'])
